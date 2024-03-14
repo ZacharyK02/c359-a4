@@ -4,6 +4,7 @@ CPSC 359 Assignment 3
 Authors:
 Zachary Kokot (UCID: 30115582)
 Rainbow Peng (UCID: 30113718)
+
 */
 
 #include "gpio.h"
