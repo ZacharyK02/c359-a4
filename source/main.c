@@ -1,6 +1,9 @@
 #include "gpio.h"
 #include "uart.h"
 #include "framebuffer.h"
+#include "controllerDriver.h"
+
+int pressedButtons;
 
 void printf(char *str) {
 	uart_puts(str);
@@ -11,6 +14,7 @@ void printf(char *str) {
 int main()
 {
     init_framebuffer(); // You can use framebuffer, width, height and pitch variables available in framebuffer.h
+    initSNES();
     
     // Draw a (Green) pixel at coordinates (10,10)
     drawPixel(10,10,0xFF00FF00);
