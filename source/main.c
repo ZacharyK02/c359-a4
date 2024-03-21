@@ -1,22 +1,75 @@
 #include "gpio.h"
 #include "uart.h"
 #include "framebuffer.h"
+#include "controllerDriver.h"
+
+typedef struct state
+{
+    int health;
+    int coins;
+};
+
+
+enum bool {
+  TRUE = 1,
+  FALSE = 0
+};
+
+int pressedButtons;
 
 void printf(char *str) {
 	uart_puts(str);
 }
 
 
-
 int main()
 {
-    init_framebuffer(); // You can use framebuffer, width, height and pitch variables available in framebuffer.h
-    
-    // Draw a (Green) pixel at coordinates (10,10)
-    drawPixel(10,10,0xFF00FF00);
+    enum bool quit = FALSE;
 
-    // Print a message to the UART.
-    printf("we printed a green pixel on the screen!!\n");
+    /////////////////////////////////Initialize////////////////////////////////
+
+    init_framebuffer(); // You can use framebuffer, width, height and pitch variables available in framebuffer.h
+    initSNES();
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    while(!quit)
+    {
+        ///////////////////////////////////Update//////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////
+
+        
+        ///////////////////////////////////Clear///////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////Draw///////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////Quit///////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////
+    }
     
     return 0;
 }
+
+void drawBackground()
+{
+    
+}
+
+void drawUI()
+{
+
+}
+
+void drawEntitiy()
+{
+
+}
+

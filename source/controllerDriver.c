@@ -31,11 +31,6 @@ int current;
 // Integer (treated as a bit string) to keep track of the previous button state.
 int previous;
 
-// Array of button names in the order they are read from the controller.
-char buttonNames[16][20] = {"B","Y","Select","Start", "Joy-pad Up",
-                            "Joy-pad Down", "Joy-pad Left", "Joy-pad Right", 
-                            "A", "X", "Left Shoulder", "Right Shoulder"};
-
 // Initializes a passed GPIO line with a passed function code.
 void initGPIO(int line, int fCode)
 {
@@ -110,26 +105,8 @@ int readSNES()
     return buttons;
 }
 
-// Prints a string to the screen.
-void printMessage(char *str) {
-	uart_puts(str);
-}
-
-int main()
+int getSNES()
 {
-    // Initializing SNES lines.
-    initGPIO(LAT, WRITE); // Set latch line to output.
-    initGPIO(DAT, READ); // Set data line to input.
-    initGPIO(CLK, WRITE); // Set clock line to output.
-
-    // Print initialization message.
-    printMessage("\n\nCreated by: Zachary Kokot and Rainbow Peng.\n\n");
-    printMessage("Please press a button...\n\n");
-
-    // Initializes previous button states and current button states to 1 (not pressed).
-    previous = 0b1111111111111111;
-    current = 0b1111111111111111;
-
     // Reads SNES controller state to initialize the buttons current state.
     // ands together 20 seperate values for the button states to remove
     // noise. (An attempt to fix the problem of bounce in the buttons.)
@@ -146,24 +123,20 @@ int main()
         for(int i = 0; i < 20; i++)
             current = current & readSNES();
 
-        // Checks if any of the button states have changed from not pressed to pressed.
-        for(int i = 0; i < 16 ; i ++)
-        {
-            // If the button state has changed print a message indicating which button
-            // was pressed and prompt user to press another.
-            if(!(current >> (i) & 1) && i != 3 && (previous >> i & 1) != (current >> i & 1))
-            {
-                printMessage("You have pressed ");
-                printMessage(buttonNames[i]);
-                printMessage("\n");
-
-                printMessage("\nPlease press a button...\n\n");
-            }
-        }       
+        // Returns the current button state in the external variable buttonContainer.
+        return current;
     }
+}
 
-    // Once start has been pressed the loop exits and a program terminating message is printed.
-    printMessage("Program is terminating...");
+void initSNES()
+{
+    // Initializing SNES lines.
+    initGPIO(LAT, WRITE); // Set latch line to output.
+    initGPIO(DAT, READ); // Set data line to input.
+    initGPIO(CLK, WRITE); // Set clock line to output.
 
-    return 0;
+    // Initializes previous button states and current button states to 1 (not pressed).
+    previous = 0b1111111111111111;
+    current = 0b1111111111111111;
+
 }
