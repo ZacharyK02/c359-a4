@@ -3,12 +3,22 @@
 #include "framebuffer.h"
 #include "controllerDriver.h"
 
+////////////////////////////////////Images/////////////////////////////////////
+#include "UI_Elements/startButtonYellow.h"
+///////////////////////////////////////////////////////////////////////////////
+
+/*
+* Screen size 1280x720.
+* Number of horizontal cells (1280/32 = 40).
+* Number of vertical cells (704/32 = 22).
+* 8 extra pixels on the top and bottom.
+*/
+
 typedef struct state
 {
     int health;
     int coins;
 };
-
 
 enum bool {
   TRUE = 1,
@@ -21,7 +31,6 @@ void printf(char *str) {
 	uart_puts(str);
 }
 
-
 int main()
 {
     enum bool quit = FALSE;
@@ -29,6 +38,8 @@ int main()
     /////////////////////////////////Initialize////////////////////////////////
 
     init_framebuffer(); // You can use framebuffer, width, height and pitch variables available in framebuffer.h
+    width = 1280;
+    height = 720;
     initSNES();
 
     ///////////////////////////////////////////////////////////////////////////
