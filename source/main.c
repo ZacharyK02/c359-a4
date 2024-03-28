@@ -7,17 +7,23 @@
 #include "UI_Elements/startButtonYellow.h"
 ///////////////////////////////////////////////////////////////////////////////
 
+#define TILESIZE 32
+#define SCREENWIDTH 1280
+#define SCREENHEIGHT 720
+#define MENUHEIGHT 80
+
 /*
 * Screen size 1280x720.
 * Number of horizontal cells (1280/32 = 40).
-* Number of vertical cells (704/32 = 22).
-* 8 extra pixels on the top and bottom.
+* Number of vertical cells (640/32 = 20).
+* 80 extra pixels on the top for game status.
 */
 
 typedef struct state
 {
     int health;
     int coins;
+    int entities[SCREENWIDTH/TILESIZE][(SCREENHEIGHT-MENUHEIGHT)/TILESIZE];
 };
 
 enum bool {
@@ -33,9 +39,9 @@ void printf(char *str) {
 
 int main()
 {
-    enum bool quit = FALSE;
-
     /////////////////////////////////Initialize////////////////////////////////
+    enum bool levelComplete = FALSE;
+    enum bool quit = FALSE;
 
     init_framebuffer(); // You can use framebuffer, width, height and pitch variables available in framebuffer.h
     width = 1280;
@@ -46,30 +52,78 @@ int main()
 
     while(!quit)
     {
-        ///////////////////////////////////Update//////////////////////////////////
+        // Main screen loop
+        while(!levelComplete)
+        {
 
-        ///////////////////////////////////////////////////////////////////////////
+        }
+        levelComplete = FALSE;
+
+        // Level 1 loop
+        while(!levelComplete)
+        {
+
+        }
+        levelComplete = FALSE;
+
+        // Level 2 loop
+        while (!levelComplete)
+        {
+            
+        }
+        
+        // End screen loop
+        while(!levelComplete)
+        {
+
+        }
+        levelComplete = FALSE;
+    }
+
+    drawBackground(200);
+    //drawImage("startButtonYellow", 474, 128, 100, 100);
+
+    // while(!quit)
+    // {
+
+    //     // if(!(getSNES() >> 4 & 1))
+    //     // {
+    //     //     drawBackground(300);
+    //     // }
+    //     ///////////////////////////////////Update//////////////////////////////////
+
+    //     ///////////////////////////////////////////////////////////////////////////
 
         
-        ///////////////////////////////////Clear///////////////////////////////////
+    //     ///////////////////////////////////Clear///////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////
-
-
-        ////////////////////////////////////Draw///////////////////////////////////
-
-        ///////////////////////////////////////////////////////////////////////////
+    //     ///////////////////////////////////////////////////////////////////////////
 
 
-        ////////////////////////////////////Quit///////////////////////////////////
+    //     ////////////////////////////////////Draw///////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////
-    }
+    //     ///////////////////////////////////////////////////////////////////////////
+
+
+    //     ////////////////////////////////////Quit///////////////////////////////////
+
+    //     ///////////////////////////////////////////////////////////////////////////
+    // }
     
     return 0;
 }
 
-void drawBackground()
+void updateTimeRem()
+{
+
+}
+
+void updatePlayerPos()
+{
+
+}
+
+void drawMap()
 {
     
 }
@@ -80,6 +134,11 @@ void drawUI()
 }
 
 void drawEntitiy()
+{
+
+}
+
+void checkCollision()
 {
 
 }
