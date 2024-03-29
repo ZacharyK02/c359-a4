@@ -3,12 +3,12 @@
 #include "framebuffer.h"
 #include "controllerDriver.h"
 
-// ////////////////////////////////////Images/////////////////////////////////////
+////////////////////////////////////Images/////////////////////////////////////
 #include "UI_Elements/startButtonYellow.h"
 #include "UI_Elements/startButtonGrey.h"
 #include "UI_Elements/exitButtonYellow.h"
 #include "UI_Elements/exitButtonGrey.h"
-// ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 // Macros for display setup
 #define TILESIZE 32
@@ -21,6 +21,7 @@
 // Macros for colors
 #define BACKGROUNDGREEN 0x32a846
 #define BLACK 0x000000
+#define RED 0xfa3434
 
 // Macro for the clock register.
 #define CLO_REG 0x7E003004
@@ -33,6 +34,17 @@
 */
 
 unsigned oldTime;
+
+int pressedButtons;
+
+/*
+* An empty entite or normal background tile is indicated by 0
+* Map:
+* 1 = Rock
+* -1 = Water
+* Entities:
+* 1 = Player
+*/
 
 int level1Map[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -65,7 +77,7 @@ int level1Entities[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -99,8 +111,6 @@ struct Button
     bool selected;
 };
 
-int pressedButtons;
-
 void printf(char *str) {
 	uart_puts(str);
 }
@@ -112,6 +122,8 @@ void drawUI()
 
 void drawMap()
 {
+    fillScreen(BACKGROUNDGREEN);
+
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
@@ -124,14 +136,74 @@ void drawMap()
     }
 }
 
-void drawEntitiy()
+void drawEntities()
 {
-
+    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
+    {
+        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
+        {
+            if(state.entities[i][j] == 1)// Draw a player entity
+            {
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, RED, 1);
+            }
+        }
+    }
 }
 
-void updatePlayerPos()
+void updateEntites()
 {
+    int xCur, yCur;
+    int xNew, yNew;
 
+    // Update player
+    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
+    {
+        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
+        {
+            if(state.entities[i][j] == 1)// get player pos
+            {
+                xCur = j;
+                yCur = i;
+
+                if(!(pressedButtons >> 4 & 1) && yCur - 1 >= 0)//Move up
+                {
+                    xNew = xCur;
+                    yNew = yCur - 1;
+                    //color background over old pos
+                }
+                else if(!(pressedButtons >> 5 & 1) && yCur + 1 < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE)//Move down
+                {
+                    xNew = xCur;
+                    yNew = yCur + 1;
+                }
+                else if(!(pressedButtons >> 6 & 1) && xCur - 1 >= 0)//Move left
+                {
+                    xNew = xCur - 1;
+                    yNew = yCur;
+                }
+                else if(!(pressedButtons >> 7 & 1) && xCur + 1 < SCREENWIDTH/TILESIZE)//Move right
+                {
+                    xNew = xCur + 1;
+                    yNew = yCur;
+                }
+                else
+                {
+                    xNew = xCur;
+                    yNew = yCur;
+                }
+
+                if(xNew != xCur || yNew != yCur)
+                {
+                    state.entities[yCur][xCur] = 0;
+                    state.entities[yNew][xNew] = 1;
+                    drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, BACKGROUNDGREEN, 1);
+                    drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, BLACK, 0);
+                    return;
+                }
+                
+            }
+        }
+    }
 }
 
 void updateTimeRem()
@@ -167,17 +239,6 @@ int main()
     width = SCREENWIDTH;
     height = SCREENHEIGHT;
     fillScreen(BACKGROUNDGREEN);
-
-    // Store the levelone map in the state map.
-    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
-    {
-        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
-        {
-            state.map[i][j] = level1Map[i][j];
-        }
-    }
-    
-    drawMap();
     
     initSNES();
 
@@ -191,10 +252,11 @@ int main()
         }
         
         oldTime = (unsigned)CLO_REG; // Take note of when the level was started.
-        // if(!level1())
-        // {
-        //     continue;
-        // }
+        level1();
+        if(state.winFlag == FALSE)
+        {
+            continue;
+        }
 
         oldTime = (unsigned)CLO_REG; // Take note of when the level was started.
         // if(!level2())
@@ -226,7 +288,9 @@ void menu()
 
     while(1)
     {
-        if(!(getSNES() >> 4 & 1) && quitButton.selected)
+        pressedButtons =  getSNES();
+
+        if(!(pressedButtons >> 4 & 1) && quitButton.selected)
         {
             startButton.selected = TRUE;
             quitButton.selected = FALSE;
@@ -234,7 +298,7 @@ void menu()
             drawImage(exitButtonYellow.pixel_data, exitButtonYellow.width, exitButtonYellow.height, 200, 300 + exitButtonYellow.height);
             
         }
-        else if(!(getSNES() >> 5 & 1) && startButton.selected)
+        else if(!(pressedButtons >> 5 & 1) && startButton.selected)
         {
             startButton.selected = FALSE;
             quitButton.selected = TRUE;
@@ -243,12 +307,12 @@ void menu()
             
         }
 
-        if(quitButton.selected && !(getSNES() >> 8 & 1))
+        if(quitButton.selected && !(pressedButtons >> 8 & 1))
         {
             state.winFlag = FALSE;
             break;
         }
-        else if(startButton.selected && !(getSNES() >> 8 & 1))
+        else if(startButton.selected && !(pressedButtons >> 8 & 1))
         {
             state.winFlag = TRUE;
             break;
@@ -258,7 +322,36 @@ void menu()
 
 void level1()
 {
-    
+    state.winFlag = FALSE;
+
+    // Store the levelone map in the state map.
+    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
+    {
+        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
+        {
+            state.map[i][j] = level1Map[i][j];
+        }
+    }
+
+    // Store the levelone entites in the state entites.
+    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
+    {
+        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
+        {
+            state.entities[i][j] = level1Entities[i][j];
+        }
+    }
+
+    // Draw the map state
+    drawMap();
+    drawEntities();
+
+    while(1)
+    {
+        pressedButtons =  getSNES();// Get current button state to update game state.
+        updateEntites();
+        drawEntities();
+    }
 }
 
 // enum bool level2()
