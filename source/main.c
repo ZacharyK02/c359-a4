@@ -12,7 +12,7 @@
 
 // Macros for display setup
 #define TILESIZE 32
-#define SCREENWIDTH 1280
+#define SCREENWIDTH 1024
 #define SCREENHEIGHT 720
 #define MENUHEIGHT 80
 #define BUTTONWIDTH 160
@@ -20,31 +20,83 @@
 
 // Macros for colors
 #define BACKGROUNDGREEN 0x32a846
+#define BLACK 0x000000
+
+// Macro for the clock register.
+#define CLO_REG 0x7E003004
 
 /*
 * Screen size 1280x720.
-* Number of horizontal cells (1280/32 = 40).
+* Number of horizontal cells (1024/32 = 32).
 * Number of vertical cells (640/32 = 20).
 * 80 extra pixels on the top for game status.
 */
 
-enum bool {
+unsigned oldTime;
+
+int level1Map[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
+int level1Entities[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
+typedef enum{
   TRUE = 1,
   FALSE = 0
-};
+}bool;
 
-typedef struct state
+struct State
 {
-    int health;
-    int coins;
-    int entities[SCREENWIDTH/TILESIZE][(SCREENHEIGHT-MENUHEIGHT)/TILESIZE];
-};
+    int map[(SCREENHEIGHT-MENUHEIGHT)/TILESIZE][SCREENWIDTH/TILESIZE];
+    int entities[(SCREENHEIGHT-MENUHEIGHT)/TILESIZE][SCREENWIDTH/TILESIZE];
+    int score;
+    int lives;
+    int timeRem;
+    bool winFlag;
+    
+}state;
 
-typedef struct Button
+struct Button
 {
     int xpos;
     int ypos;
-    int selected;
+    bool selected;
 };
 
 int pressedButtons;
@@ -53,7 +105,26 @@ void printf(char *str) {
 	uart_puts(str);
 }
 
-void updateTimeRem()
+void drawUI()
+{
+
+}
+
+void drawMap()
+{
+    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
+    {
+        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
+        {
+            if(state.map[i][j] == 0)// Draw a regular background tile
+            {
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, BLACK, 0);
+            }
+        }
+    }
+}
+
+void drawEntitiy()
 {
 
 }
@@ -63,56 +134,69 @@ void updatePlayerPos()
 
 }
 
-void drawMap()
+void updateTimeRem()
 {
-    
+    unsigned deltaT = (unsigned)CLO_REG - oldTime;
+    oldTime = (unsigned)CLO_REG;
+    state.timeRem -= deltaT/1000;
 }
 
-void drawUI()
+bool checkCollision(x, y)
 {
+    // Check to see if a collision would occur when moving to position x, y
+    if(state.map[x][y] != 0 || state.entities[x][y] != 0)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
 
 }
 
-void drawEntitiy()
-{
-
-}
-
-void checkCollision()
-{
-
-}
-
-int menu();
-int level1();
-int level2();
+void menu();
+void level1();
+void level2();
 
 int main()
 {
     /////////////////////////////////Initialize////////////////////////////////
-    enum bool levelComplete = FALSE;
-    enum bool quit = FALSE;
 
     init_framebuffer(); // You can use framebuffer, width, height and pitch variables available in framebuffer.h
-    width = 1280;
-    height = 720;
+    width = SCREENWIDTH;
+    height = SCREENHEIGHT;
     fillScreen(BACKGROUNDGREEN);
+
+    // Store the levelone map in the state map.
+    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
+    {
+        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
+        {
+            state.map[i][j] = level1Map[i][j];
+        }
+    }
+    
+    drawMap();
     
     initSNES();
 
     ///////////////////////////////////////////////////////////////////////////
     while(1)
     {
-        if(!menu())
+        menu();
+        if(state.winFlag == FALSE)
         {
             break;
         }
-
+        
+        oldTime = (unsigned)CLO_REG; // Take note of when the level was started.
         // if(!level1())
         // {
         //     continue;
         // }
 
+        oldTime = (unsigned)CLO_REG; // Take note of when the level was started.
         // if(!level2())
         // {
         //     continue;
@@ -125,13 +209,20 @@ int main()
     return 0;
 }
 
-int menu()
+void menu()
 {
     struct Button startButton, quitButton;
     startButton.selected = TRUE;
     quitButton.selected = FALSE;
     drawImage(startButtonGrey.pixel_data, startButtonGrey.width, startButtonGrey.height, 200, 200);
     drawImage(exitButtonYellow.pixel_data, exitButtonYellow.width, exitButtonYellow.height, 200, 300 + exitButtonYellow.height);
+
+    // Refresh/Initilize game state
+    state.lives = 4;
+    state.score = 0;
+    state.timeRem = 300000; // 5 minutes = 300 seconds = 300000 milliseconds.
+    state.winFlag = FALSE;
+
 
     while(1)
     {
@@ -154,19 +245,21 @@ int menu()
 
         if(quitButton.selected && !(getSNES() >> 8 & 1))
         {
-            return FALSE;
+            state.winFlag = FALSE;
+            break;
         }
         else if(startButton.selected && !(getSNES() >> 8 & 1))
         {
-            return TRUE;
+            state.winFlag = TRUE;
+            break;
         }
     }
 }
 
-// enum bool level1()
-// {
-
-// }
+void level1()
+{
+    
+}
 
 // enum bool level2()
 // {
