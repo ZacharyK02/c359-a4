@@ -8,6 +8,11 @@
 #include "UI_Elements/startButtonGrey.h"
 #include "UI_Elements/exitButtonYellow.h"
 #include "UI_Elements/exitButtonGrey.h"
+
+#include "EntityAssets/grass.h"
+#include "EntityAssets/rock.h"
+#include "EntityAssets/apple.h"
+#include "EntityAssets/coin.h"
 ///////////////////////////////////////////////////////////////////////////////
 
 // Macros for display setup
@@ -21,10 +26,14 @@
 // Macros for colors
 #define BACKGROUNDGREEN 0x32a846
 #define BLACK 0x000000
+#define WHITE 0xffffff
 #define RED 0xfa3434
 
 // Macro for the clock register.
 #define CLO_REG 0x7E003004
+
+// Macros for game constants.
+#define TICKTIME 100000 //Time between game updates in milliseconds
 
 /*
 * Screen size 1280x720.
@@ -44,13 +53,17 @@ int pressedButtons;
 * -1 = Water
 * Entities:
 * 1 = Player
+* 2 = Apple
+* 3 = Coin
+* 4 = Invinsibility
+* 5 = Goal
 */
 
-int level1Map[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+int level1Map[20][40] ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -67,9 +80,9 @@ int level1Map[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-int level1Entities[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+int level1Entities[20][40]={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -78,7 +91,7 @@ int level1Entities[20][40] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -130,7 +143,13 @@ void drawMap()
         {
             if(state.map[i][j] == 0)// Draw a regular background tile
             {
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, BLACK, 0);
+                drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+            }
+            else if(state.map[i][j] == 1)// Draw a rock background tile
+            {
+                drawImage(rock.pixel_data, rock.width, rock.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
             }
         }
     }
@@ -146,11 +165,56 @@ void drawEntities()
             {
                 drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, RED, 1);
             }
+            else if(state.entities[i][j] == 2)// Draw a apple entity
+            {
+                drawImage(apple.pixel_data, apple.width, apple.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+            }
+            else if(state.entities[i][j] == 3)// Draw a coin entity
+            {
+                drawImage(coin.pixel_data, coin.width, coin.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+            }
         }
     }
 }
 
-void updateEntites()
+bool checkCollision(x, y)
+{
+    // Check to see if a collision would occur when moving to position x, y
+    if(state.map[y][x] != 0)
+    {
+        return TRUE;
+    }
+    // If lives are less than 4 when picking up an apple increse it by 1 and erase the apple
+    else if(state.entities[y][x] == 2 && state.lives < 4)
+    {
+        state.lives += 1;
+        state.entities[y][x] = 0;
+        return FALSE;
+    }
+    // If lives are 4 increse the score by 5 and still erase the apple
+    else if(state.entities[y][x] == 2 && state.lives >= 4)
+    {
+        state.score += 5;
+        state.entities[y][x] = 0;
+        return FALSE;
+    }
+    // When colliding with a coin incresse score by 1 and erase the coin
+    else if(state.entities[y][x] == 3)
+    {
+        state.score++;
+        state.entities[y][x] = 0;
+        return FALSE;
+    }
+    else
+    {
+        return FALSE;
+    }
+
+}
+
+void updatePlayer()
 {
     int xCur, yCur;
     int xNew, yNew;
@@ -165,23 +229,23 @@ void updateEntites()
                 xCur = j;
                 yCur = i;
 
-                if(!(pressedButtons >> 4 & 1) && yCur - 1 >= 0)//Move up
+                if(!(pressedButtons >> 4 & 1) && yCur - 1 >= 0 && !checkCollision(xCur, yCur - 1))//Move up
                 {
                     xNew = xCur;
                     yNew = yCur - 1;
                     //color background over old pos
                 }
-                else if(!(pressedButtons >> 5 & 1) && yCur + 1 < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE)//Move down
+                else if(!(pressedButtons >> 5 & 1) && yCur + 1 < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE && !checkCollision(xCur, yCur + 1))//Move down
                 {
                     xNew = xCur;
                     yNew = yCur + 1;
                 }
-                else if(!(pressedButtons >> 6 & 1) && xCur - 1 >= 0)//Move left
+                else if(!(pressedButtons >> 6 & 1) && xCur - 1 >= 0 && !checkCollision(xCur - 1, yCur))//Move left
                 {
                     xNew = xCur - 1;
                     yNew = yCur;
                 }
-                else if(!(pressedButtons >> 7 & 1) && xCur + 1 < SCREENWIDTH/TILESIZE)//Move right
+                else if(!(pressedButtons >> 7 & 1) && xCur + 1 < SCREENWIDTH/TILESIZE && !checkCollision(xCur + 1, yCur))//Move right
                 {
                     xNew = xCur + 1;
                     yNew = yCur;
@@ -196,8 +260,8 @@ void updateEntites()
                 {
                     state.entities[yCur][xCur] = 0;
                     state.entities[yNew][xNew] = 1;
-                    drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, BACKGROUNDGREEN, 1);
-                    drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, BLACK, 0);
+                    drawImage(grass.pixel_data, grass.width, grass.height, xCur*TILESIZE, yCur*TILESIZE + MENUHEIGHT);
+                    drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
                     return;
                 }
                 
@@ -211,20 +275,6 @@ void updateTimeRem()
     unsigned deltaT = (unsigned)CLO_REG - oldTime;
     oldTime = (unsigned)CLO_REG;
     state.timeRem -= deltaT/1000;
-}
-
-bool checkCollision(x, y)
-{
-    // Check to see if a collision would occur when moving to position x, y
-    if(state.map[x][y] != 0 || state.entities[x][y] != 0)
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-
 }
 
 void menu();
@@ -349,8 +399,10 @@ void level1()
     while(1)
     {
         pressedButtons =  getSNES();// Get current button state to update game state.
-        updateEntites();
+        updatePlayer();
         drawEntities();
+        for(int i = 0; i < 1000; i++)
+            wait(TICKTIME);
     }
 }
 
