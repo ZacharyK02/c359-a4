@@ -1,5 +1,12 @@
 {
     "files.associations": {
-        "grass.h": "c"
+        "grass.h": "c",
+        "nolives.h": "c",
+        "lives.h": "c",
+        "two.h": "c",
+        "six.h": "c",
+        "one.h": "c",
+        "nine.h": "c",
+        "snakew.h": "c"
     }
 }

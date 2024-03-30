@@ -9,6 +9,26 @@
 #include "UI_Elements/exitButtonYellow.h"
 #include "UI_Elements/exitButtonGrey.h"
 
+#include "UI_Elements/noLives.h"
+#include "UI_Elements/oneLife.h"
+#include "UI_Elements/twoLives.h"
+#include "UI_Elements/threeLives.h"
+#include "UI_Elements/lives.h"
+#include "UI_Elements/score.h"
+#include "UI_Elements/meso.h"
+#include "UI_Elements/zero.h"
+#include "UI_Elements/one.h"
+#include "UI_Elements/two.h"
+#include "UI_Elements/three.h"
+#include "UI_Elements/four.h"
+#include "UI_Elements/five.h"
+#include "UI_Elements/six.h"
+#include "UI_Elements/seven.h"
+#include "UI_Elements/eight.h"
+#include "UI_Elements/nine.h"
+#include "UI_Elements/ten.h"
+#include "UI_Elements/time.h"
+
 #include "EntityAssets/grass.h"
 #include "EntityAssets/rock.h"
 #include "EntityAssets/apple.h"
@@ -155,8 +175,86 @@ void printf(char *str) {
 }
 
 void drawUI()
-{
+{   
+    // Set menu bar background to be black.
+    for (int row = 0; row < MENUHEIGHT; row++)
+    {
+        for (int col = 0; col < SCREENWIDTH; col++)
+        {
+            drawPixel(col, row, BLACK);
+        }
+    }
+    drawImage(lives.pixel_data, lives.width, lives.height, TILESIZE, TILESIZE);
+    drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE); // Full health at the start.
+    
+    drawImage(score.pixel_data, score.width, score.height, 9*TILESIZE, TILESIZE); 
+    drawImage(zero.pixel_data, zero.width, zero.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4); // 0 score at the start. 
+    drawImage(meso.pixel_data, meso.width, meso.height, 13*TILESIZE - TILESIZE/4, TILESIZE);
+    
+    drawImage(time.pixel_data, time.width, time.height, 16*TILESIZE, TILESIZE); 
 
+}
+
+void updateUI()
+{
+    if (state.lives == 0)
+    {
+        drawImage(noLives.pixel_data, noLives.width, noLives.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 1)
+    {
+        drawImage(oneLife.pixel_data, oneLife.width, oneLife.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 2)
+    {
+        drawImage(twoLives.pixel_data, twoLives.width, twoLives.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 3)
+    {
+        drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE);
+    }
+
+
+    if (state.score == 1)
+    {
+        drawImage(one.pixel_data, one.width, one.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 2)
+    {
+        drawImage(two.pixel_data, two.width, two.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 3)
+    {
+        drawImage(three.pixel_data, three.width, three.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 4)
+    {
+        drawImage(four.pixel_data, four.width, four.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 5)
+    {
+        drawImage(five.pixel_data, five.width, five.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 6)
+    {
+        drawImage(six.pixel_data, six.width, six.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 7)
+    {
+        drawImage(seven.pixel_data, seven.width, seven.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 8)
+    {
+        drawImage(eight.pixel_data, eight.width, eight.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 9)
+    {
+        drawImage(nine.pixel_data, nine.width, nine.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else if (state.score == 10)
+    {
+        drawImage(ten.pixel_data, ten.width, ten.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
 }
 
 void drawMap()
@@ -233,21 +331,21 @@ bool checkCollision(int entityIndex, int x, int y)
     {
         return TRUE;
     }
-    // If lives are less than 4 when picking up an apple increse it by 1 and erase the apple
+    // If lives are less than 4 when picking up an apple increase it by 1 and erase the apple
     else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives < 4)
     {
         state.lives += 1;
         state.entities[y][x] = 0;
         return FALSE;
     }
-    // If lives are 4 increse the score by 5 and still erase the apple
+    // If lives are 4 increase the score by 5 and still erase the apple
     else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives >= 4)
     {
         state.score += 5;
         state.entities[y][x] = 0;
         return FALSE;
     }
-    // When colliding with a coin incresse score by 1 and erase the coin
+    // When colliding with a coin increase score by 1 and erase the coin
     else if(entityIndex == PLAYER && state.entities[y][x] == 3)
     {
         state.score++;
@@ -536,6 +634,7 @@ void level1()
     
     // Draw the map state
     drawMap();
+    drawUI();
     drawEntities();
 
     while(1)
@@ -543,6 +642,7 @@ void level1()
         pressedButtons =  getSNES();// Get current button state to update game state.
         updatePlayer();
         updateSaws();
+        updateUI();
         drawEntities();
         for(int i = 0; i < 10000; i++)
             wait(TICKTIME);
