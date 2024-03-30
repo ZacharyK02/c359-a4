@@ -40,7 +40,7 @@
 #define CLO_REG 0x7E003004
 
 // Macros for game constants.
-#define TICKTIME 100000
+#define TICKTIME 1000
 #define SAWCOUNT 6
 #define FLAMECOUNT 4
 
@@ -84,47 +84,47 @@ int pressedButtons;
 * 12-15 = Flame enemies (Move in a psudo random direction)
 */
 
-int level1Map[20][40] ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+int level1Map[20][32] ={{0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-int level1Entities[20][40]={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+int level1Entities[20][32]={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 typedef enum{
   TRUE = 1,
@@ -234,14 +234,14 @@ bool checkCollision(int entityIndex, int x, int y)
         return TRUE;
     }
     // If lives are less than 4 when picking up an apple increse it by 1 and erase the apple
-    else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives < 4)
+    else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives < 3)
     {
         state.lives += 1;
         state.entities[y][x] = 0;
         return FALSE;
     }
     // If lives are 4 increse the score by 5 and still erase the apple
-    else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives >= 4)
+    else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives >= 3)
     {
         state.score += 5;
         state.entities[y][x] = 0;
@@ -253,6 +253,22 @@ bool checkCollision(int entityIndex, int x, int y)
         state.score++;
         state.entities[y][x] = 0;
         return FALSE;
+    }
+    else if(entityIndex == PLAYER && (state.entities[y][x] >= 6 && state.entities[y][x] <= 11))
+    {
+        state.lives--;
+        return TRUE;
+
+    }
+    else if(entityIndex == SAW && state.entities[y][x] == 1)
+    {
+        state.lives--;
+        return TRUE;
+    }
+    else if(entityIndex == PLAYER && state.entities[y][x] == 5)
+    {
+        state.winFlag = TRUE;
+        return TRUE;
     }
     else if(state.entities[y][x] != 0)
     {
@@ -323,7 +339,8 @@ void updatePlayer()
 
 void updateSaws()
 {
-    int count = 0;
+    int updated[SAWCOUNT] = {0,0,0,0,0,0};
+    int index;
 
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
@@ -331,70 +348,76 @@ void updateSaws()
         {
            if(state.entities[i][j] >= 6 && state.entities[i][j] <= 8)//X direction saw
            {
-                if(state.entities[i][j] == (count + SAWCOUNT))//dont update the same saw twice
+                index = state.entities[i][j] - 6;
+                if(updated[index] == 0)//dont update the same saw twice
                 {
-                    if(state.sawVel[count] == 1 )// Saw is moving to the right
+                    if(state.sawVel[index] == 1 )// Saw is moving to the right
                     {
-                        if(!checkCollision(SAW, j, i+1))// Try to move saw right again
+                        if(!checkCollision(SAW, j+1, i) && j+1 < SCREENWIDTH/TILESIZE)// Try to move saw right again
                         {
-                            state.entities[i+1][j] = (count+SAWCOUNT);
+                            state.entities[i][j+1] = state.entities[i][j];
                             state.entities[i][j] = 0;
                             drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
                             drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
                         }
                         else
                         {
-                            state.sawVel[count] = -1;
+                            state.sawVel[index] = -1;
                         }
                     }
                     else// Saw is moving to the left
                     {
-                        if(!checkCollision(SAW, j, i-1))// Try to move saw left again
+                        if(!checkCollision(SAW, j-1, i) && j-1 >= 0)// Try to move saw left again
                         {
-                            state.entities[i-1][j] = (count+SAWCOUNT);
+                            state.entities[i][j-1] = state.entities[i][j];
                             state.entities[i][j] = 0;
                             drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
                             drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
                         }
                         else
                         {
-                            state.sawVel[count] = 1;
+                            state.sawVel[index] = 1;
                         }
                     }
 
-                    count++;
+                    updated[index] = 1;
                 }
             }
             else if(state.entities[i][j] >= 9 && state.entities[i][j] <= 11)//Y direction saw
-            {
-                if(state.entities[i][j] == (count + SAWCOUNT))//dont update the same saw twice
+           {
+                index = state.entities[i][j] - 6;
+                if(updated[index] == 0)//dont update the same saw twice
                 {
-                    if(state.sawVel[count] == 1 )// Saw is moving to the down
+                    if(state.sawVel[index] == 1 )// Saw is moving to the down
                     {
-                        if(!checkCollision(SAW, j+1, i))// Try to move saw down again
+                        if(!checkCollision(SAW, j, i+1) && i+1 < SCREENWIDTH/TILESIZE)// Try to move saw down again
                         {
-                            state.entities[i][j+1] = (count+SAWCOUNT);
+                            state.entities[i+1][j] = state.entities[i][j];
                             state.entities[i][j] = 0;
+                            drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
                         }
                         else
                         {
-                            state.sawVel[count] = -1;
+                            state.sawVel[index] = -1;
                         }
                     }
                     else// Saw is moving to the up
                     {
-                        if(!checkCollision(SAW, j-1, i))// Try to move saw up again
+                        if(!checkCollision(SAW, j, i-1) && i-1 >= 0)// Try to move saw up again
                         {
-                            state.entities[i][j-1] = (count+SAWCOUNT);
+                            state.entities[i-1][j] = state.entities[i][j];
                             state.entities[i][j] = 0;
+                            drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
                         }
                         else
                         {
-                            state.sawVel[count] = 1;
+                            state.sawVel[index] = 1;
                         }
                     }
 
-                    count++;
+                    updated[index] = 1;
                 }
             }
         }
@@ -403,7 +426,60 @@ void updateSaws()
 
 void updateFlames()
 {
+    int updated[SAWCOUNT] = {0,0,0,0};
+    int index;
 
+    int xNew, yNew;
+
+    for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
+    {
+        for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
+        {
+            if(state.entities[i][j] >= 11 && state.entities[i][j] <= 15)
+           {
+                index = state.entities[i][j] - 11;
+                if(updated[index] == 0 )// Flame has been updated
+                {
+                    switch (((unsigned) CLO_REG >> 2)%4)
+                    {
+                    case 0:
+                        yNew = i+1;
+                        xNew = j;
+                        break;
+
+                    case 1:
+                        yNew = i;
+                        xNew = j+1;
+                        break;
+
+                    case 2:
+                        yNew = i-1;
+                        xNew = j;
+                        break;
+
+                    case 3:
+                        yNew = i;
+                        xNew = j-1;
+                        break;
+                    
+                    default:
+                        break;
+                    }
+
+                    if(!checkCollision(FLAME, xNew, yNew) && xNew < SCREENWIDTH/TILESIZE && yNew < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE
+                        && xNew >= 0 && yNew >= 0)
+                    {
+                        state.entities[yNew][xNew] = state.entities[i][j];
+                        state.entities[i][j] = 0;
+                        drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                        drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                    }
+
+                    updated[index] = 1;
+                }
+           }
+        }
+    }
 }
 
 void updateTimeRem()
@@ -466,7 +542,7 @@ void menu()
     drawImage(exitButtonYellow.pixel_data, exitButtonYellow.width, exitButtonYellow.height, 200, 300 + exitButtonYellow.height);
 
     // Refresh/Initilize game state
-    state.lives = 4;
+    state.lives = 3;
     state.score = 0;
     state.timeRem = 300000; // 5 minutes = 300 seconds = 300000 milliseconds.
     state.winFlag = FALSE;
@@ -538,13 +614,14 @@ void level1()
     drawMap();
     drawEntities();
 
-    while(1)
+    while(state.lives > 0 && state.winFlag == FALSE)
     {
         pressedButtons =  getSNES();// Get current button state to update game state.
         updatePlayer();
         updateSaws();
+        updateFlames();
         drawEntities();
-        for(int i = 0; i < 10000; i++)
+        for(int i = 0; i < 100000; i++)
             wait(TICKTIME);
     }
 }
