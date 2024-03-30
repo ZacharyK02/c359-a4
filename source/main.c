@@ -718,6 +718,7 @@ void level1()
         pressedButtons =  getSNES();// Get current button state to update game state.
         updatePlayer();
         updateSaws();
+        updateUI();
         drawEntities();
         for(int i = 0; i < 100000; i++)
             wait(TICKTIME);
