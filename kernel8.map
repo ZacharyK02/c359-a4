@@ -24,7 +24,11 @@ LOAD build/ssp.o
 LOAD build/uart.o
                 0x0000000000080000                . = 0x80000
 
+<<<<<<< Updated upstream
 .text           0x0000000000080000     0x287c
+=======
+.text           0x0000000000080000     0x37a8
+>>>>>>> Stashed changes
  *(.text.boot)
  .text.boot     0x0000000000080000       0x50 build/start.o
                 0x0000000000080000                _start
@@ -45,6 +49,7 @@ LOAD build/uart.o
                 0x0000000000080778                fillScreen
                 0x00000000000807fc                drawRect
                 0x00000000000808ec                drawImage
+<<<<<<< Updated upstream
  .text          0x00000000000809ec     0x1abc build/main.o
                 0x00000000000809ec                printf
                 0x0000000000080a0c                drawUI
@@ -125,6 +130,92 @@ LOAD build/uart.o
  *(COMMON)
                 0x0000000000196860                __bss_end = .
                 0x0000000000196860                _end = .
+=======
+ .text          0x00000000000809ec     0x29e8 build/main.o
+                0x00000000000809ec                printf
+                0x0000000000080a0c                intToString
+                0x0000000000080c2c                drawUI
+                0x0000000000080df8                updateUI
+                0x0000000000081850                pauseMenu
+                0x0000000000081858                drawMap
+                0x0000000000081a08                drawEntities
+                0x0000000000081f60                checkCollision
+                0x000000000008228c                updatePlayer
+                0x000000000008257c                updateSaws
+                0x0000000000082c28                updateFlames
+                0x0000000000082e6c                getTime
+                0x0000000000082e94                updateTimeRem
+                0x0000000000082f04                main
+                0x0000000000082fcc                menu
+                0x00000000000831f8                level1
+ .text          0x00000000000833d4       0xac build/mbox.o
+                0x00000000000833d4                mbox_call
+ .text          0x0000000000083480       0x1c build/ssp.o
+                0x0000000000083480                __stack_chk_fail
+ .text          0x000000000008349c      0x30c build/uart.o
+                0x000000000008349c                spin_for_cycles
+                0x00000000000834d0                uart_init
+                0x000000000008363c                uart_send
+                0x000000000008367c                uart_getc
+                0x00000000000836cc                uart_puts
+                0x0000000000083728                uart_hex
+
+.iplt           0x00000000000837a8        0x0
+ .iplt          0x00000000000837a8        0x0 build/start.o
+
+.rodata         0x00000000000837a8   0x11777a
+ *(.rodata .rodata.* .gnu.linkonce.r*)
+ .rodata        0x00000000000837a8   0x117752 build/main.o
+ *fill*         0x000000000019aefa        0x6 
+ .rodata        0x000000000019af00       0x22 build/ssp.o
+                [!provide]                        PROVIDE (_data = .)
+
+.rela.dyn       0x000000000019af28        0x0
+ .rela.iplt     0x000000000019af28        0x0 build/start.o
+ .rela.text.boot
+                0x000000000019af28        0x0 build/start.o
+
+.data           0x000000000019af28     0x1430
+ *(.data .data.* .gnu.linkonce.d*)
+ .data          0x000000000019af28        0x0 build/start.o
+ .data          0x000000000019af28       0x30 build/controllerDriver.o
+                0x000000000019af28                gpfs
+ .data          0x000000000019af58        0x0 build/framebuffer.o
+ .data          0x000000000019af58     0x1400 build/main.o
+                0x000000000019af58                level1Map
+                0x000000000019b958                level1Entities
+ .data          0x000000000019c358        0x0 build/mbox.o
+ .data          0x000000000019c358        0x0 build/ssp.o
+ .data          0x000000000019c358        0x0 build/uart.o
+
+.igot.plt       0x000000000019c358        0x0
+ .igot.plt      0x000000000019c358        0x0 build/start.o
+
+.bss            0x000000000019c360     0x14e0
+                0x000000000019c360                . = ALIGN (0x10)
+                0x000000000019c360                __bss_start = .
+ *(.bss .bss.*)
+ .bss           0x000000000019c360        0x0 build/start.o
+ .bss           0x000000000019c360        0x8 build/controllerDriver.o
+                0x000000000019c360                current
+                0x000000000019c364                previous
+ .bss           0x000000000019c368       0x18 build/framebuffer.o
+                0x000000000019c368                width
+                0x000000000019c36c                height
+                0x000000000019c370                pitch
+                0x000000000019c378                framebuffer
+ .bss           0x000000000019c380     0x1430 build/main.o
+                0x000000000019c380                oldTime
+                0x000000000019c384                pressedButtons
+                0x000000000019c388                state
+ .bss           0x000000000019d7b0       0x90 build/mbox.o
+                0x000000000019d7b0                mbox
+ .bss           0x000000000019d840        0x0 build/ssp.o
+ .bss           0x000000000019d840        0x0 build/uart.o
+ *(COMMON)
+                0x000000000019d840                __bss_end = .
+                0x000000000019d840                _end = .
+>>>>>>> Stashed changes
 
 /DISCARD/
  *(.comment)
@@ -135,6 +226,7 @@ LOAD build/uart.o
 OUTPUT(kernel8.elf elf64-littleaarch64)
 LOAD linker stubs
 
+<<<<<<< Updated upstream
 .debug_info     0x0000000000000000     0x1b41
  .debug_info    0x0000000000000000      0x271 build/controllerDriver.o
  .debug_info    0x0000000000000271      0x347 build/framebuffer.o
@@ -150,6 +242,23 @@ LOAD linker stubs
  .debug_abbrev  0x0000000000000537       0x98 build/mbox.o
  .debug_abbrev  0x00000000000005cf       0x60 build/ssp.o
  .debug_abbrev  0x000000000000062f      0x126 build/uart.o
+=======
+.debug_info     0x0000000000000000     0x210c
+ .debug_info    0x0000000000000000      0x271 build/controllerDriver.o
+ .debug_info    0x0000000000000271      0x347 build/framebuffer.o
+ .debug_info    0x00000000000005b8     0x1889 build/main.o
+ .debug_info    0x0000000000001e41       0xba build/mbox.o
+ .debug_info    0x0000000000001efb       0x68 build/ssp.o
+ .debug_info    0x0000000000001f63      0x1a9 build/uart.o
+
+.debug_abbrev   0x0000000000000000      0x75c
+ .debug_abbrev  0x0000000000000000      0x130 build/controllerDriver.o
+ .debug_abbrev  0x0000000000000130      0x132 build/framebuffer.o
+ .debug_abbrev  0x0000000000000262      0x2dc build/main.o
+ .debug_abbrev  0x000000000000053e       0x98 build/mbox.o
+ .debug_abbrev  0x00000000000005d6       0x60 build/ssp.o
+ .debug_abbrev  0x0000000000000636      0x126 build/uart.o
+>>>>>>> Stashed changes
 
 .debug_aranges  0x0000000000000000      0x120
  .debug_aranges
@@ -165,6 +274,7 @@ LOAD linker stubs
  .debug_aranges
                 0x00000000000000f0       0x30 build/uart.o
 
+<<<<<<< Updated upstream
 .debug_line     0x0000000000000000      0xf0d
  .debug_line    0x0000000000000000      0x182 build/controllerDriver.o
  .debug_line    0x0000000000000182      0x1b9 build/framebuffer.o
@@ -181,23 +291,42 @@ LOAD linker stubs
  .debug_str     0x00000000000003f8       0x6d build/mbox.o
  .debug_str     0x00000000000003f8       0x51 build/ssp.o
  .debug_str     0x00000000000003f8       0xb3 build/uart.o
+=======
+.debug_line     0x0000000000000000     0x13a7
+ .debug_line    0x0000000000000000      0x182 build/controllerDriver.o
+ .debug_line    0x0000000000000182      0x1b9 build/framebuffer.o
+ .debug_line    0x000000000000033b      0xe18 build/main.o
+ .debug_line    0x0000000000001153       0x93 build/mbox.o
+ .debug_line    0x00000000000011e6       0x58 build/ssp.o
+ .debug_line    0x000000000000123e      0x169 build/uart.o
+
+.debug_str      0x0000000000000000      0x499
+ .debug_str     0x0000000000000000      0x499 build/controllerDriver.o
+                                         0xe1 (size before relaxing)
+ .debug_str     0x0000000000000499       0xfe build/framebuffer.o
+ .debug_str     0x0000000000000499      0x3b4 build/main.o
+ .debug_str     0x0000000000000499       0x6d build/mbox.o
+ .debug_str     0x0000000000000499       0x51 build/ssp.o
+ .debug_str     0x0000000000000499       0xb3 build/uart.o
+>>>>>>> Stashed changes
 
 .debug_line_str
-                0x0000000000000000      0x238
+                0x0000000000000000      0x2a7
  .debug_line_str
-                0x0000000000000000      0x238 build/controllerDriver.o
-                                         0xc3 (size before relaxing)
+                0x0000000000000000      0x2a7 build/controllerDriver.o
+                                         0xb1 (size before relaxing)
  .debug_line_str
-                0x0000000000000238       0xbb build/framebuffer.o
+                0x00000000000002a7       0xa9 build/framebuffer.o
  .debug_line_str
-                0x0000000000000238      0x225 build/main.o
+                0x00000000000002a7      0x28b build/main.o
  .debug_line_str
-                0x0000000000000238       0x9f build/mbox.o
+                0x00000000000002a7       0x8d build/mbox.o
  .debug_line_str
-                0x0000000000000238       0xa3 build/ssp.o
+                0x00000000000002a7       0x91 build/ssp.o
  .debug_line_str
-                0x0000000000000238       0xa6 build/uart.o
+                0x00000000000002a7       0x94 build/uart.o
 
+<<<<<<< Updated upstream
 .debug_frame    0x0000000000000000      0x530
  .debug_frame   0x0000000000000000      0x120 build/controllerDriver.o
  .debug_frame   0x0000000000000120       0xd0 build/framebuffer.o
@@ -205,3 +334,12 @@ LOAD linker stubs
  .debug_frame   0x00000000000003e0       0x30 build/mbox.o
  .debug_frame   0x0000000000000410       0x30 build/ssp.o
  .debug_frame   0x0000000000000440       0xf0 build/uart.o
+=======
+.debug_frame    0x0000000000000000      0x5b0
+ .debug_frame   0x0000000000000000      0x120 build/controllerDriver.o
+ .debug_frame   0x0000000000000120       0xd0 build/framebuffer.o
+ .debug_frame   0x00000000000001f0      0x270 build/main.o
+ .debug_frame   0x0000000000000460       0x30 build/mbox.o
+ .debug_frame   0x0000000000000490       0x30 build/ssp.o
+ .debug_frame   0x00000000000004c0       0xf0 build/uart.o
+>>>>>>> Stashed changes
