@@ -29,6 +29,18 @@
 #include "UI_Elements/ten.h"
 #include "UI_Elements/time.h"
 
+#include "UI_Elements/timeZero.h"
+#include "UI_Elements/timeOne.h"
+#include "UI_Elements/timeTwo.h"
+#include "UI_Elements/timeThree.h"
+#include "UI_Elements/timeFour.h"
+#include "UI_Elements/timeFive.h"
+#include "UI_Elements/timeSix.h"
+#include "UI_Elements/timeSeven.h"
+#include "UI_Elements/timeEight.h"
+#include "UI_Elements/timeNine.h"
+#include "UI_Elements/seconds.h"
+
 #include "EntityAssets/grass.h"
 #include "EntityAssets/rock.h"
 #include "EntityAssets/apple.h"
@@ -174,6 +186,44 @@ void printf(char *str) {
 	uart_puts(str);
 }
 
+void intToString(int n)
+{
+    // Taken from the internet, just for seeing what the clock value is. REMOVE BEFORE SUBMISSION. 
+    char buffer[50];
+    int i = 0;
+
+    bool isNeg = n<0;
+
+    unsigned int n1 = isNeg ? -n : n;
+
+    while(n1!=0)
+    {
+        buffer[i++] = n1%10+'0';
+        n1=n1/10;
+    }
+
+    if(isNeg)
+        buffer[i++] = '-';
+
+    buffer[i] = '\0';
+
+    for(int t = 0; t < i/2; t++)
+    {
+        buffer[t] ^= buffer[i-t-1];
+        buffer[i-t-1] ^= buffer[t];
+        buffer[t] ^= buffer[i-t-1];
+    }
+
+    if(n == 0)
+    {
+        buffer[0] = '0';
+        buffer[1] = '\0';
+    }   
+
+    printf(buffer);
+    printf("\n");
+}
+
 void drawUI()
 {   
     // Set menu bar background to be black.
@@ -192,11 +242,17 @@ void drawUI()
     drawImage(meso.pixel_data, meso.width, meso.height, 13*TILESIZE - TILESIZE/4, TILESIZE);
     
     drawImage(time.pixel_data, time.width, time.height, 16*TILESIZE, TILESIZE); 
+    // Time 300s at start initially. 
+    drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 19*TILESIZE-10 +  TILESIZE/2, TILESIZE); 
+    drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    drawImage(seconds.pixel_data, seconds.width, seconds.height, 21*TILESIZE-30 + TILESIZE/2, TILESIZE); 
 
 }
 
 void updateUI()
 {
+    // Update lives
     if (state.lives == 0)
     {
         drawImage(noLives.pixel_data, noLives.width, noLives.height, 4*TILESIZE, TILESIZE);
@@ -214,7 +270,7 @@ void updateUI()
         drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE);
     }
 
-
+    // Update score
     if (state.score == 1)
     {
         drawImage(one.pixel_data, one.width, one.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
@@ -255,6 +311,146 @@ void updateUI()
     {
         drawImage(ten.pixel_data, ten.width, ten.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
     }
+
+    // Update time
+    int ones = state.timeRem % 10;
+    int tens = (state.timeRem/10) % 10;
+    int hundreds = (state.timeRem/100) % 10;
+
+    if (hundreds == 0)
+    {
+        drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 1)
+    {
+        drawImage(timeOne.pixel_data, timeOne.width, timeOne.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 2)
+    {
+        drawImage(timeTwo.pixel_data, timeTwo.width, timeTwo.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 3)
+    {
+        drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 4)
+    {
+        drawImage(timeFour.pixel_data, timeFour.width, timeFour.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 5)
+    {
+        drawImage(timeFive.pixel_data, timeFive.width, timeFive.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 6)
+    {
+        drawImage(timeSix.pixel_data, timeSix.width, timeSix.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 7)
+    {
+        drawImage(timeSeven.pixel_data, timeSeven.width, timeSeven.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 8)
+    {
+        drawImage(timeEight.pixel_data, timeEight.width, timeEight.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+    else if (hundreds == 9)
+    {
+        drawImage(timeNine.pixel_data, timeNine.width, timeNine.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    }
+
+    if (tens == 0)
+    {
+        drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE);
+    }
+    else if (tens == 1)
+    {
+        drawImage(timeOne.pixel_data, timeOne.width, timeOne.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE);
+    }
+    else if (tens == 2)
+    {
+        drawImage(timeTwo.pixel_data, timeTwo.width, timeTwo.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 3)
+    {
+        drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 4)
+    {
+        drawImage(timeFour.pixel_data, timeFour.width, timeFour.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 5)
+    {
+        drawImage(timeFive.pixel_data, timeFive.width, timeFive.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 6)
+    {
+        drawImage(timeSix.pixel_data, timeSix.width, timeSix.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 7)
+    {
+        drawImage(timeSeven.pixel_data, timeSeven.width, timeSeven.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 8)
+    {
+        drawImage(timeEight.pixel_data, timeEight.width, timeEight.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 9)
+    {
+        drawImage(timeNine.pixel_data, timeNine.width, timeNine.height, 19*TILESIZE-10 + TILESIZE/2, TILESIZE); 
+    }
+
+
+    if (ones == 0)
+    {
+        drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 1)
+    {
+        drawImage(timeOne.pixel_data, timeOne.width, timeOne.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE);
+    }
+    else if (ones == 2)
+    {
+        drawImage(timeTwo.pixel_data, timeTwo.width, timeTwo.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 3)
+    {
+        drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 4)
+    {
+        drawImage(timeFour.pixel_data, timeFour.width, timeFour.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 5)
+    {
+        drawImage(timeFive.pixel_data, timeFive.width, timeFive.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 6)
+    {
+        drawImage(timeSix.pixel_data, timeSix.width, timeSix.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 7)
+    {
+        drawImage(timeSeven.pixel_data, timeSeven.width, timeSeven.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 8)
+    {
+        drawImage(timeEight.pixel_data, timeEight.width, timeEight.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 9)
+    {
+        drawImage(timeNine.pixel_data, timeNine.width, timeNine.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+}
+
+void pauseMenu()
+{
+    /*
+    In the game loop where all the stuff is updated, check if the start button has been pressed and if it has draw the 
+    pause menu over the game and loop until the start button is pressed again. 
+    Then when the start button is pressed again redraw the map and entities and return to the game loop
+    */
+
+
 }
 
 void drawMap()
@@ -580,11 +776,19 @@ void updateFlames()
     }
 }
 
-void updateTimeRem()
+unsigned getTime()
 {
-    unsigned deltaT = (unsigned)CLO_REG - oldTime;
-    oldTime = (unsigned)CLO_REG;
+    unsigned *clo = (unsigned*)CLO_REG;
+    unsigned c = *clo;
+    return c;
+}
+
+void updateTimeRem()
+{   
+    unsigned deltaT = getTime() - oldTime;
+    oldTime = getTime();
     state.timeRem -= deltaT/1000;
+    intToString(state.timeRem);
 }
 
 void menu();
@@ -611,7 +815,8 @@ int main()
             break;
         }
         
-        oldTime = (unsigned)CLO_REG; // Take note of when the level was started.
+        oldTime = getTime(); // Take note of when the level was started.
+        intToString(oldTime); // Remove before submission. Just seeing what the clock prints. 
         level1();
         if(state.winFlag == FALSE)
         {
@@ -719,6 +924,7 @@ void level1()
         updatePlayer();
         updateSaws();
         updateUI();
+        updateTimeRem();
         drawEntities();
         for(int i = 0; i < 100000; i++)
             wait(TICKTIME);
