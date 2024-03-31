@@ -174,20 +174,6 @@ void printf(char *str) {
 	uart_puts(str);
 }
 
-unsigned getTime()
-{
-    unsigned *clo = (unsigned*)CLO_REG;
-    unsigned c = *clo;
-    return c;
-}
-
-void updateTimeRem()
-{   
-    unsigned deltaT = getTime() - oldTime;
-    oldTime = getTime();
-    state.timeRem -= deltaT/1000;
-}
-
 void drawUI()
 {   
     // Set menu bar background to be black.
@@ -591,6 +577,20 @@ void updateFlames()
            }
         }
     }
+}
+
+unsigned getTime()
+{
+    unsigned *clo = (unsigned*)CLO_REG;
+    unsigned c = *clo;
+    return c;
+}
+
+void updateTimeRem()
+{   
+    unsigned deltaT = getTime() - oldTime;
+    oldTime = getTime();
+    state.timeRem -= deltaT/1000;
 }
 
 void menu();
