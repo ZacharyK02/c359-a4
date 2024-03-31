@@ -537,7 +537,7 @@ bool checkCollision(int entityIndex, int x, int y)
     // If lives are 4 increse the score by 5 and still erase the apple
     else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives >= 3)
     {
-        state.score += 5;
+        state.score += 2;
         state.entities[y][x] = 0;
         return FALSE;
     }
@@ -734,7 +734,7 @@ void updateFlames()
                 index = state.entities[i][j] - 11;
                 if(updated[index] == 0 )// Flame has been updated
                 {
-                    switch (((unsigned) CLO_REG >> 2)%4)
+                    switch ((getTime() >> 3)%4)
                     {
                     case 0:
                         yNew = i+1;
@@ -823,7 +823,7 @@ int main()
             continue;
         }
 
-        oldTime = (unsigned)CLO_REG; // Take note of when the level was started.
+        oldTime = getTime(); // Take note of when the level was started.
         // if(!level2())
         // {
         //     continue;
@@ -923,6 +923,7 @@ void level1()
         pressedButtons =  getSNES();// Get current button state to update game state.
         updatePlayer();
         updateSaws();
+        updateFlames();
         updateUI();
         updateTimeRem();
         drawEntities();
