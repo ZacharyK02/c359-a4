@@ -113,19 +113,15 @@ int getSNES()
     for(int i = 0; i < 20; i++)
         current = current & readSNES();
 
-    // Loops while the start button is not pressed.
-    while((current >> 3) & 1)
-    {
-        // Stores current button state to be used to check for state change.
-        previous = current;
-        current = 0b1111111111111111;
-        // Read SNES controller state to update current state.
-        for(int i = 0; i < 20; i++)
-            current = current & readSNES();
+    // Stores current button state to be used to check for state change.
+    previous = current;
+    current = 0b1111111111111111;
+    // Read SNES controller state to update current state.
+    for(int i = 0; i < 20; i++)
+        current = current & readSNES();
 
-        // Returns the current button state in the external variable buttonContainer.
-        return current;
-    }
+    // Returns the current button state in the external variable buttonContainer.
+    return current;
 }
 
 void initSNES()

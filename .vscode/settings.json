@@ -7,6 +7,14 @@
         "six.h": "c",
         "one.h": "c",
         "nine.h": "c",
-        "snakew.h": "c"
+        "snakew.h": "c",
+        "startscreen.h": "c",
+        "quitbutton2.h": "c",
+        "twolives.h": "c",
+        "zero.h": "c",
+        "restartbutton.h": "c",
+        "restartbutton2.h": "c",
+        "pausequitbutton.h": "c",
+        "pausequitbutton2.h": "c"
     }
 }
