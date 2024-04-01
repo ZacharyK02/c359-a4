@@ -5,10 +5,16 @@
 #include "random.h"
 
 ////////////////////////////////////Images/////////////////////////////////////
-#include "UI_Elements/startButtonYellow.h"
-#include "UI_Elements/startButtonGrey.h"
-#include "UI_Elements/exitButtonYellow.h"
-#include "UI_Elements/exitButtonGrey.h"
+// #include "UI_Elements/startButtonYellow.h"
+// #include "UI_Elements/startButtonGrey.h"
+// #include "UI_Elements/exitButtonYellow.h"
+// #include "UI_Elements/exitButtonGrey.h"
+
+#include "UI_Elements/startButton.h"
+#include "UI_Elements/startButton2.h"
+#include "UI_Elements/quitButton.h"
+#include "UI_Elements/quitButton2.h"
+
 
 #include "UI_Elements/noLives.h"
 #include "UI_Elements/oneLife.h"
@@ -41,6 +47,14 @@
 #include "UI_Elements/timeEight.h"
 #include "UI_Elements/timeNine.h"
 #include "UI_Elements/seconds.h"
+
+#include "UI_Elements/pauseMenu.h"
+#include "UI_Elements/startScreen.h"
+#include "UI_Elements/restartButton.h"
+#include "UI_Elements/restartButton2.h"
+#include "UI_Elements/pauseQuitButton.h"
+#include "UI_Elements/pauseQuitButton2.h"
+#include "UI_Elements/gameOver.h"
 
 #include "EntityAssets/grass.h"
 #include "EntityAssets/sand.h"
@@ -230,6 +244,8 @@ struct State
     int level;
     bool stateChange;
     bool winFlag;
+    bool restart;
+    bool quit;
 }state;
 
 struct Button
@@ -504,15 +520,56 @@ void updateUI()
     }
 }
 
-void pauseMenu()
+void drawPauseMenu()
 {
-    /*
-    In the game loop where all the stuff is updated, check if the start button has been pressed and if it has draw the 
-    pause menu over the game and loop until the start button is pressed again. 
-    Then when the start button is pressed again redraw the map and entities and return to the game loop
-    */
+    struct Button restart, quit;
+    restart.selected = TRUE;
+    quit.selected = FALSE;
 
+    drawImage(pauseMenu.pixel_data, pauseMenu.width, pauseMenu.height, 323, 120);
+    drawImage(restartButton2.pixel_data, restartButton2.width, restartButton2.height, 323+55, 120+167);
+    drawImage(pauseQuitButton.pixel_data, pauseQuitButton.width, pauseQuitButton.height, 323+51, 120+297);
 
+    while (1)
+    {
+        pressedButtons = getSNES();
+        if (!(pressedButtons >> 3 & 1))
+        {
+            drawMap();
+            drawEntities();
+            drawUI();
+            updateUI();
+            break;
+        }
+        if (!(pressedButtons >> 4 & 1) && quit.selected)
+        {
+            restart.selected = TRUE;
+            quit.selected = FALSE;
+            drawImage(restartButton2.pixel_data, restartButton2.width, restartButton2.height, 323+55, 120+167);
+            drawImage(pauseQuitButton.pixel_data, pauseQuitButton.width, pauseQuitButton.height, 323+51, 120+297);   
+        }
+        else if (!(pressedButtons >> 5 & 1) && restart.selected)
+        {
+            restart.selected = FALSE;
+            quit.selected = TRUE;
+            drawImage(restartButton.pixel_data, restartButton.width, restartButton.height, 323+55, 120+167);
+            drawImage(pauseQuitButton2.pixel_data, pauseQuitButton2.width, pauseQuitButton2.height, 323+51, 120+297);  
+        }
+        if(quit.selected && !(pressedButtons >> 8 & 1))
+        {
+            state.quit = TRUE;
+            state.restart = FALSE;
+            state.winFlag = FALSE;
+            break;
+        }
+        else if(restart.selected && !(pressedButtons >> 8 & 1))
+        {
+            state.quit = FALSE;
+            state.restart = TRUE;
+            state.winFlag = TRUE;
+            break;
+        }
+    }
 }
 
 void drawTile(int x, int y)
@@ -938,6 +995,8 @@ int main()
     
     initSNES();
 
+    state.restart == FALSE; 
+    state.quit == FALSE; 
     ///////////////////////////////////////////////////////////////////////////
     while(1)
     {
@@ -946,12 +1005,16 @@ int main()
         {
             break;
         }
+        // else if (state.winFlag == TRUE)
+        // {
+        //     endMenu();
+        // }
         
         level(1, level1Map, level1Entities);
         if(state.winFlag == FALSE)
         {
             // display lose screen and wait for play to press any button.
-            continue;
+            state.quit == FALSE;
         }
 
         level(2, level2Map, level2Entities);
@@ -973,11 +1036,12 @@ int main()
 
 void menu()
 {
-    struct Button startButton, quitButton;
-    startButton.selected = TRUE;
-    quitButton.selected = FALSE;
-    drawImage(startButtonGrey.pixel_data, startButtonGrey.width, startButtonGrey.height, 200, 200);
-    drawImage(exitButtonYellow.pixel_data, exitButtonYellow.width, exitButtonYellow.height, 200, 300 + exitButtonYellow.height);
+    struct Button start, quit;
+    start.selected = TRUE;
+    quit.selected = FALSE;
+    drawImage(startScreen.pixel_data, startScreen.width, startScreen.height, 0, 0);
+    drawImage(startButton2.pixel_data, startButton2.width, startButton2.height, 180, 424);
+    drawImage(quitButton.pixel_data, quitButton.width, quitButton.height, 185, 548);
 
     // Refresh/Initilize game state
     state.lives = 3;
@@ -986,40 +1050,44 @@ void menu()
     state.invincible = FALSE;
     state.winFlag = FALSE;
 
-
     while(1)
     {
         pressedButtons =  getSNES();
 
-        if(!(pressedButtons >> 4 & 1) && quitButton.selected)
+        if(!(pressedButtons >> 4 & 1) && quit.selected)
         {
-            startButton.selected = TRUE;
-            quitButton.selected = FALSE;
-            drawImage(startButtonGrey.pixel_data, startButtonGrey.width, startButtonGrey.height, 200, 200);
-            drawImage(exitButtonYellow.pixel_data, exitButtonYellow.width, exitButtonYellow.height, 200, 300 + exitButtonYellow.height);
-            
+            start.selected = TRUE;
+            quit.selected = FALSE;
+            drawImage(startButton2.pixel_data, startButton2.width, startButton2.height, 180, 424);
+            drawImage(quitButton.pixel_data, quitButton.width, quitButton.height, 185, 548);
         }
-        else if(!(pressedButtons >> 5 & 1) && startButton.selected)
+        else if(!(pressedButtons >> 5 & 1) && start.selected)
         {
-            startButton.selected = FALSE;
-            quitButton.selected = TRUE;
-            drawImage(startButtonYellow.pixel_data, startButtonYellow.width, startButtonYellow.height, 200, 200);
-            drawImage(exitButtonGrey.pixel_data, exitButtonGrey.width, exitButtonGrey.height, 200, 300 + exitButtonGrey.height);
-            
+            start.selected = FALSE;
+            quit.selected = TRUE;
+            drawImage(startButton.pixel_data, startButton.width, startButton.height, 186, 428);
+            drawImage(quitButton2.pixel_data, quitButton2.width, quitButton2.height, 186, 546);
         }
 
-        if(quitButton.selected && !(pressedButtons >> 8 & 1))
+        if(quit.selected && !(pressedButtons >> 8 & 1))
         {
             state.winFlag = FALSE;
             break;
         }
-        else if(startButton.selected && !(pressedButtons >> 8 & 1))
+        else if(start.selected && !(pressedButtons >> 8 & 1))
         {
             state.winFlag = TRUE;
             break;
         }
     }
 }
+
+void endMenu()
+{
+    fillScreen(BLACK);
+    drawImage(gameOver.pixel_data, gameOver.width, gameOver.height, 396, 300);
+}
+
 
 void level(int level, int worldMap[20][32], int entityMap[20][32])
 {
@@ -1074,5 +1142,24 @@ void level(int level, int worldMap[20][32], int entityMap[20][32])
         for(int i = 0; i < FRAMETIME/100; i++)
             wait(1);
         updateTimeRem(FRAMETIME/10); // I lost a fact of 10 somewhere so this is divided by 10.
+
+        if (!(pressedButtons >> 3 & 1))
+        {
+            drawPauseMenu();
+        }
+        if (state.restart == TRUE)
+        {
+            break;
+        }
+        else if (state.quit == TRUE)
+        {
+            break;
+        }
     }
 }
+
+// enum bool level2()
+// {
+
+// }
+        
