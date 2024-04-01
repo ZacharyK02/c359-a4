@@ -2,6 +2,7 @@
 #include "uart.h"
 #include "framebuffer.h"
 #include "controllerDriver.h"
+#include "random.h"
 
 ////////////////////////////////////Images/////////////////////////////////////
 #include "UI_Elements/startButtonYellow.h"
@@ -52,6 +53,11 @@
 #include "EntityAssets/snakeN.h"
 #include "EntityAssets/snakeS.h"
 #include "EntityAssets/snakeW.h"
+#include "EntityAssets/potion.h"
+#include "EntityAssets/snakeEInv.h"
+#include "EntityAssets/snakeNInv.h"
+#include "EntityAssets/snakeSInv.h"
+#include "EntityAssets/snakeWInv.h"
 ///////////////////////////////////////////////////////////////////////////////
 
 // Macros for display setup
@@ -72,14 +78,20 @@
 #define CLO_REG 0x7E003004
 
 // Macros for game constants.
-#define TICKTIME 1000
+#define TICKTIME 10 //microseconds "this is broken???"
+#define FRAMETIME 1000000 // frame time in microseconds. Frequency of game refresh.
 #define SAWCOUNT 6
 #define FLAMECOUNT 4
+#define INVINCIBILEDURATION 100 //game ticks of invincibility.
 
 // Entity indices
 #define PLAYER 1
-#define SAW 2
-#define FLAME 3
+#define APPLE 2
+#define COIN 3
+#define POTION 4
+#define GOAL 5
+#define SAW 6
+#define FLAME 7
 
 /*
 * Screen size 1280x720.
@@ -87,8 +99,6 @@
 * Number of vertical cells (640/32 = 20).
 * 80 extra pixels on the top for game status.
 */
-
-unsigned oldTime;
 
 int pressedButtons;
 
@@ -116,43 +126,43 @@ int pressedButtons;
 * 12-15 = Flame enemies (Move in a psudo random direction)
 */
 
-int level1Map[20][32] ={{0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+int level1Map[20][32]     ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0},
+                            {1,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-int level1Entities[20][32]={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+int level1Entities[20][32]={{0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {3,3,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0},
+                            {3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,13,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,15,0,0,0},
+                            {8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -171,6 +181,8 @@ struct State
     int score;
     int lives;
     int timeRem;
+    bool invincible;
+    int invincibleTime;
     bool winFlag;
     
 }state;
@@ -184,6 +196,11 @@ struct Button
 
 void printf(char *str) {
 	uart_puts(str);
+}
+
+void updateTimeRem(int frameTime)
+{   
+    state.timeRem -= frameTime;
 }
 
 void intToString(int n)
@@ -313,9 +330,9 @@ void updateUI()
     }
 
     // Update time
-    int ones = state.timeRem % 10;
-    int tens = (state.timeRem/10) % 10;
-    int hundreds = (state.timeRem/100) % 10;
+    int ones = (state.timeRem/1000000) % 10;
+    int tens = (state.timeRem/10000000) % 10;
+    int hundreds = (state.timeRem/100000000) % 10;
 
     if (hundreds == 0)
     {
@@ -481,9 +498,14 @@ void drawEntities()
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-            if(state.entities[i][j] == 1)// Draw a player entity
+            if(state.entities[i][j] == 1 && state.invincible == FALSE)// Draw a player entity
             {
                 drawImage(snakeE.pixel_data, snakeE.width, snakeE.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+            }
+            else if(state.entities[i][j] == 1 && state.invincible == TRUE)
+            {
+                drawImage(snakeEInv.pixel_data, snakeEInv.width, snakeEInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
                 drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
             }
             else if(state.entities[i][j] == 2)// Draw a apple entity
@@ -498,7 +520,7 @@ void drawEntities()
             }
             else if(state.entities[i][j] == 4)// Draw a invinsibility power up entity
             {
-                drawImage(coin.pixel_data, coin.width, coin.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                drawImage(potion.pixel_data, potion.width, potion.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
                 drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
             }
             else if(state.entities[i][j] == 5)// Draw a goal entity
@@ -516,6 +538,7 @@ void drawEntities()
                 drawImage(flame.pixel_data, flame.width, flame.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
                 drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
             }
+            
         }
     }
 }
@@ -528,38 +551,56 @@ bool checkCollision(int entityIndex, int x, int y)
         return TRUE;
     }
     // If lives are less than 4 when picking up an apple increse it by 1 and erase the apple
-    else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives < 3)
+    else if(entityIndex == PLAYER && state.entities[y][x] == APPLE && state.lives < 3)
     {
         state.lives += 1;
         state.entities[y][x] = 0;
         return FALSE;
     }
     // If lives are 4 increse the score by 5 and still erase the apple
-    else if(entityIndex == PLAYER && state.entities[y][x] == 2 && state.lives >= 3)
+    else if(entityIndex == PLAYER && state.entities[y][x] == APPLE && state.lives >= 3)
     {
         state.score += 2;
         state.entities[y][x] = 0;
         return FALSE;
     }
     // When colliding with a coin increase score by 1 and erase the coin
-    else if(entityIndex == PLAYER && state.entities[y][x] == 3)
+    else if(entityIndex == PLAYER && state.entities[y][x] == COIN)
     {
         state.score++;
         state.entities[y][x] = 0;
         return FALSE;
     }
-    else if(entityIndex == PLAYER && (state.entities[y][x] >= 6 && state.entities[y][x] <= 11))
+    // When colliding with a potion increase score by 1 and erase the potion
+    else if(entityIndex == PLAYER && state.entities[y][x] == POTION)
+    {
+        state.invincible = TRUE;
+        state.invincibleTime = INVINCIBILEDURATION;
+        state.entities[y][x] = 0;
+        return FALSE;
+    }
+    else if(entityIndex == PLAYER && (state.entities[y][x] >= 6 && state.entities[y][x] <= 15) && state.invincible == FALSE)
     {
         state.lives--;
         return TRUE;
 
     }
-    else if(entityIndex == SAW && state.entities[y][x] == 1)
+    else if(entityIndex == PLAYER && (state.entities[y][x] >= 12 && state.entities[y][x] <= 15) && state.invincible == TRUE)
+    {
+        state.entities[y][x] = 0;
+        return FALSE;
+    }
+    else if(entityIndex == SAW && state.entities[y][x] == PLAYER && state.invincible == FALSE)
     {
         state.lives--;
         return TRUE;
     }
-    else if(entityIndex == PLAYER && state.entities[y][x] == 5)
+    else if(entityIndex == FLAME && state.entities[y][x] == PLAYER && state.invincible == FALSE)
+    {
+        state.lives--;
+        return TRUE;
+    }
+    else if(entityIndex == PLAYER && state.entities[y][x] == GOAL)
     {
         state.winFlag = TRUE;
         return TRUE;
@@ -579,6 +620,15 @@ void updatePlayer()
 {
     int xCur, yCur;
     int xNew, yNew;
+
+    if(state.invincibleTime <= 0)
+    {
+        state.invincible = FALSE;
+    }
+    else
+    {
+        state.invincibleTime -= 1;
+    }
 
     // Update player
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
@@ -720,7 +770,7 @@ void updateSaws()
 
 void updateFlames()
 {
-    int updated[SAWCOUNT] = {0,0,0,0};
+    int updated[FLAMECOUNT] = {0,0,0,0};
     int index;
 
     int xNew, yNew;
@@ -729,12 +779,13 @@ void updateFlames()
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-            if(state.entities[i][j] >= 11 && state.entities[i][j] <= 15)
+            if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15)
            {
-                index = state.entities[i][j] - 11;
+                index = state.entities[i][j] - 12;
                 if(updated[index] == 0 )// Flame has been updated
                 {
-                    switch ((getTime() >> 3)%4)
+
+                    switch (rand()*(rand()/rand())%4)// An attempt to make random numbers....
                     {
                     case 0:
                         yNew = i+1;
@@ -759,36 +810,24 @@ void updateFlames()
                     default:
                         break;
                     }
-
-                    if(!checkCollision(FLAME, xNew, yNew) && xNew < SCREENWIDTH/TILESIZE && yNew < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE
+                    if(xNew < SCREENWIDTH/TILESIZE && yNew < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE
                         && xNew >= 0 && yNew >= 0)
                     {
+                        if(!checkCollision(FLAME, xNew, yNew))
+                        {
                         state.entities[yNew][xNew] = state.entities[i][j];
                         state.entities[i][j] = 0;
                         drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
                         drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                        }
                     }
+                    
 
                     updated[index] = 1;
                 }
            }
         }
     }
-}
-
-unsigned getTime()
-{
-    unsigned *clo = (unsigned*)CLO_REG;
-    unsigned c = *clo;
-    return c;
-}
-
-void updateTimeRem()
-{   
-    unsigned deltaT = getTime() - oldTime;
-    oldTime = getTime();
-    state.timeRem -= deltaT/1000;
-    intToString(state.timeRem);
 }
 
 void menu();
@@ -815,15 +854,12 @@ int main()
             break;
         }
         
-        oldTime = getTime(); // Take note of when the level was started.
-        intToString(oldTime); // Remove before submission. Just seeing what the clock prints. 
         level1();
         if(state.winFlag == FALSE)
         {
             continue;
         }
 
-        oldTime = getTime(); // Take note of when the level was started.
         // if(!level2())
         // {
         //     continue;
@@ -847,7 +883,8 @@ void menu()
     // Refresh/Initilize game state
     state.lives = 3;
     state.score = 0;
-    state.timeRem = 300000; // 5 minutes = 300 seconds = 300000 milliseconds.
+    state.timeRem = 300000000; // 5 minutes = 300 seconds = 300000 milliseconds.
+    state.invincible = FALSE;
     state.winFlag = FALSE;
 
 
@@ -918,17 +955,21 @@ void level1()
     drawUI();
     drawEntities();
 
-    while(state.lives > 0 && state.winFlag == FALSE)
+    while(getSNES() >> 3 & 1); // Wait for start button to be pressed before starting the game.
+
+    while(state.lives > 0 && state.winFlag == FALSE && state.timeRem > 0)
     {
         pressedButtons =  getSNES();// Get current button state to update game state.
         updatePlayer();
         updateSaws();
         updateFlames();
         updateUI();
-        updateTimeRem();
         drawEntities();
-        for(int i = 0; i < 100000; i++)
-            wait(TICKTIME);
+        // The wait function only works reliably for small time values so run it multiple
+        // times instead of using a larger value.
+        for(int i = 0; i < FRAMETIME/100; i++)
+            wait(1);
+        updateTimeRem(FRAMETIME/10); // I lost a fact of 10 somewhere so this is divided by 10.
     }
 }
 
