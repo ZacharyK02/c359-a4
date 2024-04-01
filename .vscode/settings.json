@@ -7,6 +7,14 @@
         "six.h": "c",
         "one.h": "c",
         "nine.h": "c",
-        "snakew.h": "c"
+        "snakew.h": "c",
+        "uart.h": "c",
+        "timefive.h": "c",
+        "timesix.h": "c",
+        "snakeeinv.h": "c",
+        "snaken.h": "c",
+        "snakes.h": "c",
+        "snakewinv.h": "c",
+        "stdint.h": "c"
     }
 }
