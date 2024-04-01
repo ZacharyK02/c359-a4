@@ -111,6 +111,7 @@
 */
 
 int pressedButtons;
+int displayTime = 300;
 
 /*
 * An empty entite or normal background tile is indicated by 0
@@ -169,6 +170,48 @@ int level1Entities[20][32]={{0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,0,0
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
+int level2Map[20][32]     ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0},
+                            {1,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                            {0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
+int level2Entities[20][32]={{0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {3,3,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0},
+                            {3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,13,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,15,0,0,0},
+                            {8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
 typedef enum{
   TRUE = 1,
   FALSE = 0
@@ -185,8 +228,8 @@ struct State
     bool invincible;
     int invincibleTime;
     int level;
+    bool stateChange;
     bool winFlag;
-    
 }state;
 
 struct Button
@@ -521,77 +564,74 @@ void drawEntities()
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-            if(state.level == 1)// draw sprites with grass background
+            if(state.entities[i][j] == 1 && state.invincible == FALSE && state.level == 1)// Draw a regular player entity
             {
-                if(state.entities[i][j] == 1 && state.invincible == FALSE)// Draw a regular player entity
-                {
-                    drawImage(snakeE.pixel_data, snakeE.width, snakeE.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 1 && state.invincible == TRUE)// Draw a invinsible player entity
-                {
-                    drawImage(snakeEInv.pixel_data, snakeEInv.width, snakeEInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 2)// Draw a apple entity
-                {
-                    drawImage(apple.pixel_data, apple.width, apple.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 3)// Draw a coin entity
-                {
-                    drawImage(coin.pixel_data, coin.width, coin.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 4)// Draw a invinsibility power up entity
-                {
-                    drawImage(potion.pixel_data, potion.width, potion.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 5)// Draw a goal entity
-                {
-                    drawImage(goal.pixel_data, goal.width, goal.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] >= 6 && state.entities[i][j] <= 11)// Draw a saw entity
-                {
-                    drawImage(saw.pixel_data, saw.width, saw.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15)// Draw a flame entity
-                {
-                    drawImage(flame.pixel_data, flame.width, flame.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
+                drawImage(snakeE.pixel_data, snakeE.width, snakeE.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
             }
-            else if(state.level == 2)// draw sprites with sand background
+            else if(state.entities[i][j] == 1 && state.invincible == TRUE && state.level == 1)// Draw a invinsible player entity
             {
-                if(state.entities[i][j] == 1 && state.invincible == FALSE)// Draw a regular player entity
-                {
-                    drawImage(snake2E.pixel_data, snake2E.width, snake2E.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 1 && state.invincible == TRUE)// Draw a invinsible player entity
-                {
-                    drawImage(snake2EInv.pixel_data, snake2EInv.width, snake2EInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 2)// Draw a apple entity
-                {
-                    drawImage(apple2.pixel_data, apple2.width, apple2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 3)// Draw a coin entity
-                {
-                    drawImage(coin2.pixel_data, coin2.width, coin2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 4)// Draw a invinsibility power up entity
-                {
-                    drawImage(potion2.pixel_data, potion2.width, potion2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] == 5)// Draw a goal entity
-                {
-                    drawImage(goal2.pixel_data, goal2.width, goal2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] >= 6 && state.entities[i][j] <= 11)// Draw a saw entity
-                {
-                    drawImage(saw2.pixel_data, saw2.width, saw2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
-                else if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15)// Draw a flame entity
-                {
-                    drawImage(flame2.pixel_data, flame2.width, flame2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                }
+                drawImage(snakeEInv.pixel_data, snakeEInv.width, snakeEInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
             }
-            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+            else if(state.entities[i][j] == 2 && state.level == 1)// Draw a apple entity
+            {
+                drawImage(apple.pixel_data, apple.width, apple.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 3 && state.level == 1)// Draw a coin entity
+            {
+                drawImage(coin.pixel_data, coin.width, coin.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 4 && state.level == 1)// Draw a invinsibility power up entity
+            {
+                drawImage(potion.pixel_data, potion.width, potion.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 5 && state.level == 1)// Draw a goal entity
+            {
+                drawImage(goal.pixel_data, goal.width, goal.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] >= 6 && state.entities[i][j] <= 11 && state.level == 1)// Draw a saw entity
+            {
+                drawImage(saw.pixel_data, saw.width, saw.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15 && state.level == 1)// Draw a flame entity
+            {
+                drawImage(flame.pixel_data, flame.width, flame.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 1 && state.invincible == FALSE && state.level == 2)// Draw a regular player entity
+            {
+                drawImage(snake2E.pixel_data, snake2E.width, snake2E.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 1 && state.invincible == TRUE && state.level == 2)// Draw a invinsible player entity
+            {
+                drawImage(snake2EInv.pixel_data, snake2EInv.width, snake2EInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 2 && state.level == 2)// Draw a apple entity
+            {
+                drawImage(apple2.pixel_data, apple2.width, apple2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 3 && state.level == 2)// Draw a coin entity
+            {
+                drawImage(coin2.pixel_data, coin2.width, coin2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 4 && state.level == 2)// Draw a invinsibility power up entity
+            {
+                drawImage(potion2.pixel_data, potion2.width, potion2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] == 5 && state.level == 2)// Draw a goal entity
+            {
+                drawImage(goal2.pixel_data, goal2.width, goal2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] >= 6 && state.entities[i][j] <= 11 && state.level == 2)// Draw a saw entity
+            {
+                drawImage(saw2.pixel_data, saw2.width, saw2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            else if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15 && state.level == 2)// Draw a flame entity
+            {
+                drawImage(flame2.pixel_data, flame2.width, flame2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+            }
+            if (state.entities[i][j] != 0)
+            {
+                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+            }
         }
     }
 }
@@ -608,6 +648,7 @@ bool checkCollision(int entityIndex, int x, int y)
     {
         state.lives += 1;
         state.entities[y][x] = 0;
+        state.stateChange = TRUE;
         return FALSE;
     }
     // If lives are 4 increse the score by 5 and still erase the apple
@@ -615,6 +656,7 @@ bool checkCollision(int entityIndex, int x, int y)
     {
         state.score += 2;
         state.entities[y][x] = 0;
+        state.stateChange = TRUE;
         return FALSE;
     }
     // When colliding with a coin increase score by 1 and erase the coin
@@ -622,6 +664,7 @@ bool checkCollision(int entityIndex, int x, int y)
     {
         state.score++;
         state.entities[y][x] = 0;
+        state.stateChange = TRUE;
         return FALSE;
     }
     // When colliding with a potion increase score by 1 and erase the potion
@@ -635,6 +678,7 @@ bool checkCollision(int entityIndex, int x, int y)
     else if(entityIndex == PLAYER && (state.entities[y][x] >= 6 && state.entities[y][x] <= 15) && state.invincible == FALSE)
     {
         state.lives--;
+        state.stateChange = TRUE;
         return TRUE;
 
     }
@@ -646,11 +690,13 @@ bool checkCollision(int entityIndex, int x, int y)
     else if(entityIndex == SAW && state.entities[y][x] == PLAYER && state.invincible == FALSE)
     {
         state.lives--;
+        state.stateChange = TRUE;
         return TRUE;
     }
     else if(entityIndex == FLAME && state.entities[y][x] == PLAYER && state.invincible == FALSE)
     {
         state.lives--;
+        state.stateChange = TRUE;
         return TRUE;
     }
     else if(entityIndex == PLAYER && state.entities[y][x] == GOAL)
@@ -832,8 +878,8 @@ void updateFlames()
                 index = state.entities[i][j] - 12;
                 if(updated[index] == 0 )// Flame has been updated
                 {
-
-                    switch (rand()*(rand()/rand())%4)// An attempt to make random numbers....
+                    // An attempt to make random numbers using the userinput as a seed.
+                    switch ((rand()*(rand()/rand()))%4)
                     {
                     case 0:
                         yNew = i+1;
@@ -901,14 +947,14 @@ int main()
             break;
         }
         
-        level1();
+        level(1, level1Map, level1Entities);
         if(state.winFlag == FALSE)
         {
             // display lose screen and wait for play to press any button.
             continue;
         }
 
-        level1();
+        level(2, level2Map, level2Entities);
         if(state.winFlag == FALSE)
         {
             // display lose screen and wait for play to press anybutton
@@ -975,17 +1021,17 @@ void menu()
     }
 }
 
-void level1()
+void level(int level, int worldMap[20][32], int entityMap[20][32])
 {
     state.winFlag = FALSE;
-    state.level = 1;
+    state.level = level;
 
     // Store the levelone map in the state map.
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-            state.map[i][j] = level1Map[i][j];
+            state.map[i][j] = worldMap[i][j];
         }
     }
 
@@ -1017,7 +1063,11 @@ void level1()
         updatePlayer();
         updateSaws();
         updateFlames();
-        updateUI();
+        if(state.stateChange == TRUE || displayTime != state.timeRem/1000000)// Only update the ui if ui elements changed.
+        {
+            updateUI();
+            state.stateChange = FALSE;
+        }
         drawEntities();
         // The wait function only works reliably for small time values so run it multiple
         // times instead of using a larger value.
@@ -1026,8 +1076,3 @@ void level1()
         updateTimeRem(FRAMETIME/10); // I lost a fact of 10 somewhere so this is divided by 10.
     }
 }
-
-//void level2()
-// {
-
-// }
