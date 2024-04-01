@@ -15,6 +15,8 @@
         "snaken.h": "c",
         "snakes.h": "c",
         "snakewinv.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "flame.h": "c",
+        "apple.h": "c"
     }
 }
