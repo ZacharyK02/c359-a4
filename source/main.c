@@ -43,18 +43,28 @@
 #include "UI_Elements/seconds.h"
 
 #include "EntityAssets/grass.h"
+#include "EntityAssets/sand.h"
 #include "EntityAssets/rock.h"
+#include "EntityAssets/water.h"
 #include "EntityAssets/apple.h"
+#include "EntityAssets/apple2.h"
 #include "EntityAssets/coin.h"
+#include "EntityAssets/coin2.h"
 #include "EntityAssets/goal.h"
+#include "EntityAssets/goal2.h"
 #include "EntityAssets/flame.h"
+#include "EntityAssets/flame2.h"
 #include "EntityAssets/saw.h"
+#include "EntityAssets/saw2.h"
 #include "EntityAssets/snakeE.h"
+#include "EntityAssets/snake2E.h"
 #include "EntityAssets/snakeN.h"
 #include "EntityAssets/snakeS.h"
 #include "EntityAssets/snakeW.h"
 #include "EntityAssets/potion.h"
+#include "EntityAssets/potion2.h"
 #include "EntityAssets/snakeEInv.h"
+#include "EntityAssets/snake2EInv.h"
 #include "EntityAssets/snakeNInv.h"
 #include "EntityAssets/snakeSInv.h"
 #include "EntityAssets/snakeWInv.h"
@@ -105,16 +115,7 @@ int pressedButtons;
 /*
 * An empty entite or normal background tile is indicated by 0
 * Map:
-* 1 = Rock
-* -1 = Water center
-* -2 = Water top-left corner
-* -3 = Water top edge
-* -4 = Water top-right corner
-* -5 = Water right edge
-* -6 = Water bottom-right corner
-* -7 = Water bottom edge
-* -8 = Water bottom-left corner
-* -9 = Water left edge
+* 1 = Rock/water
 * Entities(use only one of each saw and flame index):
 * 1 = Player
 * 2 = Apple
@@ -183,6 +184,7 @@ struct State
     int timeRem;
     bool invincible;
     int invincibleTime;
+    int level;
     bool winFlag;
     
 }state;
@@ -470,24 +472,45 @@ void pauseMenu()
 
 }
 
+void drawTile(int x, int y)
+{
+    if(state.map[y][x] == 0)// Draw a regular background tile
+    {
+        if(state.level == 1)// Level 1, Grass level
+        {
+            drawImage(grass.pixel_data, grass.width, grass.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+        else if(state.level == 2)// Level 2, Sand level
+        {
+            drawImage(sand.pixel_data, sand.width, sand.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+    }
+    else if(state.map[y][x] == 1)// Draw an obstical tile
+    {
+        if(state.level == 1)// Level 1, rock obsticle
+        {
+            drawImage(rock.pixel_data, rock.width, rock.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+        else if(state.level == 2)// Level 2, water obsticle
+        {
+            drawImage(water.pixel_data, water.width, water.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+    }
+    
+}
+
 void drawMap()
 {
-    fillScreen(BACKGROUNDGREEN);
-
+    fillScreen(BLACK);
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-            if(state.map[i][j] == 0)// Draw a regular background tile
-            {
-                drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
-            else if(state.map[i][j] == 1)// Draw a rock background tile
-            {
-                drawImage(rock.pixel_data, rock.width, rock.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
+            drawTile(j,i);
         }
     }
 }
@@ -498,47 +521,77 @@ void drawEntities()
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-            if(state.entities[i][j] == 1 && state.invincible == FALSE)// Draw a player entity
+            if(state.level == 1)// draw sprites with grass background
             {
-                drawImage(snakeE.pixel_data, snakeE.width, snakeE.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                if(state.entities[i][j] == 1 && state.invincible == FALSE)// Draw a regular player entity
+                {
+                    drawImage(snakeE.pixel_data, snakeE.width, snakeE.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 1 && state.invincible == TRUE)// Draw a invinsible player entity
+                {
+                    drawImage(snakeEInv.pixel_data, snakeEInv.width, snakeEInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 2)// Draw a apple entity
+                {
+                    drawImage(apple.pixel_data, apple.width, apple.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 3)// Draw a coin entity
+                {
+                    drawImage(coin.pixel_data, coin.width, coin.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 4)// Draw a invinsibility power up entity
+                {
+                    drawImage(potion.pixel_data, potion.width, potion.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 5)// Draw a goal entity
+                {
+                    drawImage(goal.pixel_data, goal.width, goal.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] >= 6 && state.entities[i][j] <= 11)// Draw a saw entity
+                {
+                    drawImage(saw.pixel_data, saw.width, saw.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15)// Draw a flame entity
+                {
+                    drawImage(flame.pixel_data, flame.width, flame.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
             }
-            else if(state.entities[i][j] == 1 && state.invincible == TRUE)
+            else if(state.level == 2)// draw sprites with sand background
             {
-                drawImage(snakeEInv.pixel_data, snakeEInv.width, snakeEInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                if(state.entities[i][j] == 1 && state.invincible == FALSE)// Draw a regular player entity
+                {
+                    drawImage(snake2E.pixel_data, snake2E.width, snake2E.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 1 && state.invincible == TRUE)// Draw a invinsible player entity
+                {
+                    drawImage(snake2EInv.pixel_data, snake2EInv.width, snake2EInv.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 2)// Draw a apple entity
+                {
+                    drawImage(apple2.pixel_data, apple2.width, apple2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 3)// Draw a coin entity
+                {
+                    drawImage(coin2.pixel_data, coin2.width, coin2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 4)// Draw a invinsibility power up entity
+                {
+                    drawImage(potion2.pixel_data, potion2.width, potion2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] == 5)// Draw a goal entity
+                {
+                    drawImage(goal2.pixel_data, goal2.width, goal2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] >= 6 && state.entities[i][j] <= 11)// Draw a saw entity
+                {
+                    drawImage(saw2.pixel_data, saw2.width, saw2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
+                else if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15)// Draw a flame entity
+                {
+                    drawImage(flame2.pixel_data, flame2.width, flame2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
+                }
             }
-            else if(state.entities[i][j] == 2)// Draw a apple entity
-            {
-                drawImage(apple.pixel_data, apple.width, apple.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
-            else if(state.entities[i][j] == 3)// Draw a coin entity
-            {
-                drawImage(coin.pixel_data, coin.width, coin.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
-            else if(state.entities[i][j] == 4)// Draw a invinsibility power up entity
-            {
-                drawImage(potion.pixel_data, potion.width, potion.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
-            else if(state.entities[i][j] == 5)// Draw a goal entity
-            {
-                drawImage(goal.pixel_data, goal.width, goal.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
-            else if(state.entities[i][j] >= 6 && state.entities[i][j] <= 11)// Draw a saw entity
-            {
-                drawImage(saw.pixel_data, saw.width, saw.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
-            else if(state.entities[i][j] >= 12 && state.entities[i][j] <= 15)// Draw a flame entity
-            {
-                drawImage(flame.pixel_data, flame.width, flame.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
-            }
-            
+            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
         }
     }
 }
@@ -671,8 +724,7 @@ void updatePlayer()
                 {
                     state.entities[yCur][xCur] = 0;
                     state.entities[yNew][xNew] = 1;
-                    drawImage(grass.pixel_data, grass.width, grass.height, xCur*TILESIZE, yCur*TILESIZE + MENUHEIGHT);
-                    drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                    drawTile(j,i);
                     return;
                 }
                 
@@ -701,8 +753,7 @@ void updateSaws()
                         {
                             state.entities[i][j+1] = state.entities[i][j];
                             state.entities[i][j] = 0;
-                            drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                            drawTile(j,i);
                         }
                         else
                         {
@@ -715,8 +766,7 @@ void updateSaws()
                         {
                             state.entities[i][j-1] = state.entities[i][j];
                             state.entities[i][j] = 0;
-                            drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                            drawTile(j,i);
                         }
                         else
                         {
@@ -738,8 +788,7 @@ void updateSaws()
                         {
                             state.entities[i+1][j] = state.entities[i][j];
                             state.entities[i][j] = 0;
-                            drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                            drawTile(j,i);
                         }
                         else
                         {
@@ -752,8 +801,7 @@ void updateSaws()
                         {
                             state.entities[i-1][j] = state.entities[i][j];
                             state.entities[i][j] = 0;
-                            drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                            drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                            drawTile(j,i);
                         }
                         else
                         {
@@ -817,8 +865,7 @@ void updateFlames()
                         {
                         state.entities[yNew][xNew] = state.entities[i][j];
                         state.entities[i][j] = 0;
-                        drawImage(grass.pixel_data, grass.width, grass.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
-                        drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+                        drawTile(j,i);
                         }
                     }
                     
@@ -857,17 +904,23 @@ int main()
         level1();
         if(state.winFlag == FALSE)
         {
+            // display lose screen and wait for play to press any button.
             continue;
         }
 
-        // if(!level2())
-        // {
-        //     continue;
-        // }
+        level1();
+        if(state.winFlag == FALSE)
+        {
+            // display lose screen and wait for play to press anybutton
+            continue;
+        }
+        
+        // all levels have been completed. Display win screen with final score
+        // wait for any button to be pressed before returning to main menu.
 
     }
 
-    fillScreen(0);
+    fillScreen(BLACK);
     
     return 0;
 }
@@ -925,6 +978,7 @@ void menu()
 void level1()
 {
     state.winFlag = FALSE;
+    state.level = 1;
 
     // Store the levelone map in the state map.
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
@@ -973,7 +1027,7 @@ void level1()
     }
 }
 
-// enum bool level2()
+//void level2()
 // {
 
 // }
