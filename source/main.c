@@ -270,11 +270,10 @@ void drawUI()
     // Set menu bar background to be black.
     drawRect(0,0,SCREENWIDTH, MENUHEIGHT, BLACK, 1);
     
-    //drawImage(lives.pixel_data, lives.width, lives.height, TILESIZE, TILESIZE);
-    drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE); // Full health at the start.
+    drawImage(lives.pixel_data, lives.width, lives.height, TILESIZE, TILESIZE);
     
     drawImage(score.pixel_data, score.width, score.height, 9*TILESIZE, TILESIZE); 
-    //drawImage(zero.pixel_data, zero.width, zero.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4); // 0 score at the start. 
+
     drawImage(meso.pixel_data, meso.width, meso.height, 13*TILESIZE - TILESIZE/4, TILESIZE);
     
     drawImage(time.pixel_data, time.width, time.height, 16*TILESIZE, TILESIZE); 
@@ -305,6 +304,10 @@ void updateUI()
     else if (state.lives == 3)
     {
         drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE);
+    }
+    else
+    {
+        drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE); // Full health at the start.
     }
 
     // Update score
@@ -347,6 +350,10 @@ void updateUI()
     else if (state.score == 10)
     {
         drawImage(ten.pixel_data, ten.width, ten.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+    }
+    else
+    {
+        drawImage(zero.pixel_data, zero.width, zero.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4); // 0 score at the start. 
     }
 
     // Update time
