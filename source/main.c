@@ -261,70 +261,29 @@ void printf(char *str) {
 
 void updateTimeRem(int frameTime)
 {   
+    // Increment the time based on the time between frames.
     state.timeRem -= frameTime;
-}
-
-void intToString(int n)
-{
-    // Taken from the internet, just for seeing what the clock value is. REMOVE BEFORE SUBMISSION. 
-    char buffer[50];
-    int i = 0;
-
-    bool isNeg = n<0;
-
-    unsigned int n1 = isNeg ? -n : n;
-
-    while(n1!=0)
-    {
-        buffer[i++] = n1%10+'0';
-        n1=n1/10;
-    }
-
-    if(isNeg)
-        buffer[i++] = '-';
-
-    buffer[i] = '\0';
-
-    for(int t = 0; t < i/2; t++)
-    {
-        buffer[t] ^= buffer[i-t-1];
-        buffer[i-t-1] ^= buffer[t];
-        buffer[t] ^= buffer[i-t-1];
-    }
-
-    if(n == 0)
-    {
-        buffer[0] = '0';
-        buffer[1] = '\0';
-    }   
-
-    printf(buffer);
-    printf("\n");
 }
 
 void drawUI()
 {   
     // Set menu bar background to be black.
-    for (int row = 0; row < MENUHEIGHT; row++)
-    {
-        for (int col = 0; col < SCREENWIDTH; col++)
-        {
-            drawPixel(col, row, BLACK);
-        }
-    }
-    drawImage(lives.pixel_data, lives.width, lives.height, TILESIZE, TILESIZE);
+    drawRect(0,0,SCREENWIDTH, MENUHEIGHT, BLACK, 1);
+    
+    //drawImage(lives.pixel_data, lives.width, lives.height, TILESIZE, TILESIZE);
     drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE); // Full health at the start.
     
     drawImage(score.pixel_data, score.width, score.height, 9*TILESIZE, TILESIZE); 
-    drawImage(zero.pixel_data, zero.width, zero.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4); // 0 score at the start. 
+    //drawImage(zero.pixel_data, zero.width, zero.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4); // 0 score at the start. 
     drawImage(meso.pixel_data, meso.width, meso.height, 13*TILESIZE - TILESIZE/4, TILESIZE);
     
     drawImage(time.pixel_data, time.width, time.height, 16*TILESIZE, TILESIZE); 
     // Time 300s at start initially. 
-    drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
-    drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 19*TILESIZE-10 +  TILESIZE/2, TILESIZE); 
-    drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    // drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 18*TILESIZE + TILESIZE/2, TILESIZE); 
+    // drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 19*TILESIZE-10 +  TILESIZE/2, TILESIZE); 
+    // drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
     drawImage(seconds.pixel_data, seconds.width, seconds.height, 21*TILESIZE-30 + TILESIZE/2, TILESIZE); 
+    
 
 }
 
@@ -533,6 +492,7 @@ void drawPauseMenu()
     while (1)
     {
         pressedButtons = getSNES();
+
         if (!(pressedButtons >> 3 & 1))
         {
             drawMap();
@@ -541,6 +501,7 @@ void drawPauseMenu()
             updateUI();
             break;
         }
+
         if (!(pressedButtons >> 4 & 1) && quit.selected)
         {
             restart.selected = TRUE;
@@ -555,18 +516,15 @@ void drawPauseMenu()
             drawImage(restartButton.pixel_data, restartButton.width, restartButton.height, 323+55, 120+167);
             drawImage(pauseQuitButton2.pixel_data, pauseQuitButton2.width, pauseQuitButton2.height, 323+51, 120+297);  
         }
+
         if(quit.selected && !(pressedButtons >> 8 & 1))
         {
             state.quit = TRUE;
-            state.restart = FALSE;
-            state.winFlag = FALSE;
             break;
         }
         else if(restart.selected && !(pressedButtons >> 8 & 1))
         {
-            state.quit = FALSE;
             state.restart = TRUE;
-            state.winFlag = TRUE;
             break;
         }
     }
@@ -605,7 +563,7 @@ void drawTile(int x, int y)
 
 void drawMap()
 {
-    fillScreen(BLACK);
+    // For all the tiles in the map draw the corrosponding tile at that location.
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
@@ -617,6 +575,9 @@ void drawMap()
 
 void drawEntities()
 {
+    // Check the entity map and draw entites corresponding to the entity index.
+    // For entites which appear multiples times and need to be updated a range of
+    // entity indices needed to be used to avoid updating the same entity twice.
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
@@ -685,7 +646,7 @@ void drawEntities()
             {
                 drawImage(flame2.pixel_data, flame2.width, flame2.height, j*TILESIZE, i*TILESIZE + MENUHEIGHT);
             }
-            if (state.entities[i][j] != 0)
+            if (state.entities[i][j] != 0)// Redraw the grid if the tile had an entity drawn.
             {
                 drawRect(j*TILESIZE, i*TILESIZE + MENUHEIGHT, (j+1)*TILESIZE, (i+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
             }
@@ -700,6 +661,8 @@ bool checkCollision(int entityIndex, int x, int y)
     {
         return TRUE;
     }
+
+    // Collisions when a player attempts to move///////////////////////////////////////////
     // If lives are less than 4 when picking up an apple increse it by 1 and erase the apple
     else if(entityIndex == PLAYER && state.entities[y][x] == APPLE && state.lives < 3)
     {
@@ -732,6 +695,11 @@ bool checkCollision(int entityIndex, int x, int y)
         state.entities[y][x] = 0;
         return FALSE;
     }
+    else if(entityIndex == PLAYER && state.entities[y][x] == GOAL)
+    {
+        state.winFlag = TRUE;
+        return TRUE;
+    }
     else if(entityIndex == PLAYER && (state.entities[y][x] >= 6 && state.entities[y][x] <= 15) && state.invincible == FALSE)
     {
         state.lives--;
@@ -744,6 +712,8 @@ bool checkCollision(int entityIndex, int x, int y)
         state.entities[y][x] = 0;
         return FALSE;
     }
+    ///////////////////////////////////////////////////////////////////////////////////////
+    // Collisions when a enemy attempts to move////////////////////////////////////////////
     else if(entityIndex == SAW && state.entities[y][x] == PLAYER && state.invincible == FALSE)
     {
         state.lives--;
@@ -756,11 +726,7 @@ bool checkCollision(int entityIndex, int x, int y)
         state.stateChange = TRUE;
         return TRUE;
     }
-    else if(entityIndex == PLAYER && state.entities[y][x] == GOAL)
-    {
-        state.winFlag = TRUE;
-        return TRUE;
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////
     else if(state.entities[y][x] != 0)
     {
         return TRUE;
@@ -774,9 +740,11 @@ bool checkCollision(int entityIndex, int x, int y)
 
 void updatePlayer()
 {
+    // Keeps track of current position and new position to move.
     int xCur, yCur;
     int xNew, yNew;
 
+    // Checks if the power up as worn off
     if(state.invincibleTime <= 0)
     {
         state.invincible = FALSE;
@@ -786,21 +754,23 @@ void updatePlayer()
         state.invincibleTime -= 1;
     }
 
-    // Update player
+    // Update player position
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-            if(state.entities[i][j] == 1)// get player pos
-            {
+            if(state.entities[i][j] == 1)
+            {   
+                // Get player pos
                 xCur = j;
                 yCur = i;
-
+                
+                // Determine the direction of movement and if it is possible to do so.
                 if(!(pressedButtons >> 4 & 1) && yCur - 1 >= 0 && !checkCollision(PLAYER, xCur, yCur - 1))//Move up
                 {
                     xNew = xCur;
                     yNew = yCur - 1;
-                    //color background over old pos
+                    
                 }
                 else if(!(pressedButtons >> 5 & 1) && yCur + 1 < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE && !checkCollision(PLAYER, xCur, yCur + 1))//Move down
                 {
@@ -817,7 +787,7 @@ void updatePlayer()
                     xNew = xCur + 1;
                     yNew = yCur;
                 }
-                else
+                else// No movement
                 {
                     xNew = xCur;
                     yNew = yCur;
@@ -825,12 +795,12 @@ void updatePlayer()
 
                 if(xNew != xCur || yNew != yCur)
                 {
+                    //If the player moved update their position in the entity map.
                     state.entities[yCur][xCur] = 0;
                     state.entities[yNew][xNew] = 1;
-                    drawTile(j,i);
+                    drawTile(j,i);//color background over old pos
                     return;
                 }
-                
             }
         }
     }
@@ -838,17 +808,19 @@ void updatePlayer()
 
 void updateSaws()
 {
+    // Array to keep track of saw entites on the map and there update status.
     int updated[SAWCOUNT] = {0,0,0,0,0,0};
     int index;
 
+    // Find saws in the map.
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
         for(int j = 0; j < SCREENWIDTH/TILESIZE; j++)
         {
-           if(state.entities[i][j] >= 6 && state.entities[i][j] <= 8)//X direction saw
+           if(state.entities[i][j] >= 6 && state.entities[i][j] <= 8)// X direction saw
            {
                 index = state.entities[i][j] - 6;
-                if(updated[index] == 0)//dont update the same saw twice
+                if(updated[index] == 0)// Dont update the same saw twice
                 {
                     if(state.sawVel[index] == 1 )// Saw is moving to the right
                     {
@@ -860,7 +832,7 @@ void updateSaws()
                         }
                         else
                         {
-                            state.sawVel[index] = -1;
+                            state.sawVel[index] = -1;// Change saw direction.
                         }
                     }
                     else// Saw is moving to the left
@@ -873,14 +845,15 @@ void updateSaws()
                         }
                         else
                         {
-                            state.sawVel[index] = 1;
+                            state.sawVel[index] = 1;// Change saw direction.
                         }
                     }
-
+                    
+                    // Mark this entity as updated.
                     updated[index] = 1;
                 }
             }
-            else if(state.entities[i][j] >= 9 && state.entities[i][j] <= 11)//Y direction saw
+            else if(state.entities[i][j] >= 9 && state.entities[i][j] <= 11)// Y direction saw
            {
                 index = state.entities[i][j] - 6;
                 if(updated[index] == 0)//dont update the same saw twice
@@ -895,7 +868,7 @@ void updateSaws()
                         }
                         else
                         {
-                            state.sawVel[index] = -1;
+                            state.sawVel[index] = -1;// Change saw direction.
                         }
                     }
                     else// Saw is moving to the up
@@ -908,10 +881,11 @@ void updateSaws()
                         }
                         else
                         {
-                            state.sawVel[index] = 1;
+                            state.sawVel[index] = 1;// Change saw direction.
                         }
                     }
 
+                    // Mark this entity as updated.
                     updated[index] = 1;
                 }
             }
@@ -921,10 +895,11 @@ void updateSaws()
 
 void updateFlames()
 {
+     // Array to keep track of flame entites on the map and there update status.
     int updated[FLAMECOUNT] = {0,0,0,0};
     int index;
 
-    int xNew, yNew;
+    int xNew, yNew; // New position for the flame entity to move.
 
     for(int i = 0; i < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE; i++)
     {
@@ -935,8 +910,8 @@ void updateFlames()
                 index = state.entities[i][j] - 12;
                 if(updated[index] == 0 )// Flame has been updated
                 {
-                    // An attempt to make random numbers using the userinput as a seed.
-                    switch ((rand()*(rand()/rand()))%4)
+                    // An attempt to make random numbers.
+                    switch (rand()*(rand()/rand())%4)
                     {
                     case 0:
                         yNew = i+1;
@@ -961,6 +936,8 @@ void updateFlames()
                     default:
                         break;
                     }
+
+                    // If the position to move is vaild move the flame enemy there.
                     if(xNew < SCREENWIDTH/TILESIZE && yNew < (SCREENHEIGHT-MENUHEIGHT)/TILESIZE
                         && xNew >= 0 && yNew >= 0)
                     {
@@ -971,8 +948,8 @@ void updateFlames()
                         drawTile(j,i);
                         }
                     }
-                    
 
+                    // Mark this entity as updated.
                     updated[index] = 1;
                 }
            }
@@ -981,8 +958,7 @@ void updateFlames()
 }
 
 void menu();
-void level1();
-void level2();
+void level();
 
 int main()
 {
@@ -991,12 +967,9 @@ int main()
     init_framebuffer(); // You can use framebuffer, width, height and pitch variables available in framebuffer.h
     width = SCREENWIDTH;
     height = SCREENHEIGHT;
-    fillScreen(BACKGROUNDGREEN);
     
     initSNES();
 
-    state.restart == FALSE; 
-    state.quit == FALSE; 
     ///////////////////////////////////////////////////////////////////////////
     while(1)
     {
@@ -1014,7 +987,7 @@ int main()
         if(state.winFlag == FALSE)
         {
             // display lose screen and wait for play to press any button.
-            state.quit == FALSE;
+            continue;
         }
 
         level(2, level2Map, level2Entities);
@@ -1044,7 +1017,7 @@ void menu()
     drawImage(quitButton.pixel_data, quitButton.width, quitButton.height, 185, 548);
 
     // Refresh/Initilize game state
-    state.lives = 3;
+    state.lives = 6;
     state.score = 0;
     state.timeRem = 300000000; // 5 minutes = 300 seconds = 300000 milliseconds.
     state.invincible = FALSE;
@@ -1088,10 +1061,11 @@ void endMenu()
     drawImage(gameOver.pixel_data, gameOver.width, gameOver.height, 396, 300);
 }
 
-
-void level(int level, int worldMap[20][32], int entityMap[20][32])
+void initLevel(int level, int worldMap[20][32], int entityMap[20][32])
 {
     state.winFlag = FALSE;
+    state.restart = FALSE;
+    state.quit = FALSE;
     state.level = level;
 
     // Store the levelone map in the state map.
@@ -1119,18 +1093,28 @@ void level(int level, int worldMap[20][32], int entityMap[20][32])
     }
     
     // Draw the map state
-    drawMap();
     drawUI();
+    updateUI();
+    drawMap();
     drawEntities();
+}
+
+void level(int level, int worldMap[20][32], int entityMap[20][32])
+{
+    levelStart:;
+
+    initLevel(level, worldMap, entityMap);
 
     while(getSNES() >> 3 & 1); // Wait for start button to be pressed before starting the game.
 
-    while(state.lives > 0 && state.winFlag == FALSE && state.timeRem > 0)
+    while(state.lives > 0 && state.winFlag == FALSE && state.quit == FALSE && state.timeRem > 0)
     {
         pressedButtons =  getSNES();// Get current button state to update game state.
+
         updatePlayer();
         updateSaws();
         updateFlames();
+
         if(state.stateChange == TRUE || displayTime != state.timeRem/1000000)// Only update the ui if ui elements changed.
         {
             updateUI();
@@ -1141,25 +1125,15 @@ void level(int level, int worldMap[20][32], int entityMap[20][32])
         // times instead of using a larger value.
         for(int i = 0; i < FRAMETIME/100; i++)
             wait(1);
-        updateTimeRem(FRAMETIME/10); // I lost a fact of 10 somewhere so this is divided by 10.
+        updateTimeRem(FRAMETIME/10); // I lost a factor of 10 somewhere so this is divided by 10.
 
-        if (!(pressedButtons >> 3 & 1))
+        if (!(pressedButtons >> 3 & 1))// Enter the pause menu when start is pressed.
         {
-            drawPauseMenu();
-        }
-        if (state.restart == TRUE)
-        {
-            break;
-        }
-        else if (state.quit == TRUE)
-        {
-            break;
+            drawPauseMenu(level, worldMap, entityMap);
+            if(state.restart == TRUE)
+            {
+                goto levelStart;// Jump back to level start if the player selected to restart the level.
+            }
         }
     }
-}
-
-// enum bool level2()
-// {
-
-// }
-        
+} 
