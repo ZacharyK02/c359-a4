@@ -1,6 +1,6 @@
 /*
 Description: An adventure version of snake as described in assignment 4.
-             This was a hard assignment but a fun one. We only time during
+             This was a hard assignment but a fun one. We only had time during
              the easter break to work on this so the following is our 
              best attempt given the time constraints. I hope you enjoy and 
              appreciate our attempt at a "snake" game.
