@@ -8,6 +8,7 @@
         "one.h": "c",
         "nine.h": "c",
         "snakew.h": "c",
+<<<<<<< Updated upstream
         "startscreen.h": "c",
         "quitbutton2.h": "c",
         "twolives.h": "c",
@@ -16,5 +17,23 @@
         "restartbutton2.h": "c",
         "pausequitbutton.h": "c",
         "pausequitbutton2.h": "c"
+=======
+        "uart.h": "c",
+        "timefive.h": "c",
+        "timesix.h": "c",
+        "snakeeinv.h": "c",
+        "snaken.h": "c",
+        "snakes.h": "c",
+        "snakewinv.h": "c",
+        "stdint.h": "c",
+        "flame.h": "c",
+        "apple.h": "c",
+        "onehalflife.h": "c",
+        "halflife.h": "c",
+        "score.h": "c",
+        "time.h": "c",
+        "meso.h": "c",
+        "zero.h": "c"
+>>>>>>> Stashed changes
     }
 }

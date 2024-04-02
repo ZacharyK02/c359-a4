@@ -14,14 +14,15 @@
 #include "UI_Elements/quitButton.h"
 #include "UI_Elements/quitButton2.h"
 
-
 #include "UI_Elements/noLives.h"
 #include "UI_Elements/oneLife.h"
 #include "UI_Elements/twoLives.h"
 #include "UI_Elements/threeLives.h"
+#include "UI_Elements/halfLife.h"
+#include "UI_Elements/oneHalfLife.h"
+#include "UI_Elements/twoHalfLife.h"
 #include "UI_Elements/lives.h"
 #include "UI_Elements/score.h"
-#include "UI_Elements/meso.h"
 #include "UI_Elements/zero.h"
 #include "UI_Elements/one.h"
 #include "UI_Elements/two.h"
@@ -33,8 +34,10 @@
 #include "UI_Elements/eight.h"
 #include "UI_Elements/nine.h"
 #include "UI_Elements/ten.h"
-#include "UI_Elements/time.h"
+#include "UI_Elements/meso.h"
+#include "UI_Elements/scoreX.h"
 
+#include "UI_Elements/time.h"
 #include "UI_Elements/timeZero.h"
 #include "UI_Elements/timeOne.h"
 #include "UI_Elements/timeTwo.h"
@@ -89,6 +92,11 @@
 #define TICKTIME 100000
 #define SAWCOUNT 6
 #define FLAMECOUNT 4
+<<<<<<< Updated upstream
+=======
+#define INVINCIBILEDURATION 100 //game ticks of invincibility.
+#define SCORECONSTANT 2 // Constant to multiple score by. 
+>>>>>>> Stashed changes
 
 // Entity indices
 #define PLAYER 1
@@ -201,42 +209,18 @@ void printf(char *str) {
 	uart_puts(str);
 }
 
+<<<<<<< Updated upstream
 void intToString(int n)
+=======
+void updateTimeRem(int frameTime)
+{   
+    state.timeRem -= frameTime;
+}
+
+void updateScore()
+>>>>>>> Stashed changes
 {
-    // Taken from the internet, just for seeing what the clock value is. REMOVE BEFORE SUBMISSION. 
-    char buffer[50];
-    int i = 0;
-
-    bool isNeg = n<0;
-
-    unsigned int n1 = isNeg ? -n : n;
-
-    while(n1!=0)
-    {
-        buffer[i++] = n1%10+'0';
-        n1=n1/10;
-    }
-
-    if(isNeg)
-        buffer[i++] = '-';
-
-    buffer[i] = '\0';
-
-    for(int t = 0; t < i/2; t++)
-    {
-        buffer[t] ^= buffer[i-t-1];
-        buffer[i-t-1] ^= buffer[t];
-        buffer[t] ^= buffer[i-t-1];
-    }
-
-    if(n == 0)
-    {
-        buffer[0] = '0';
-        buffer[1] = '\0';
-    }   
-
-    printf(buffer);
-    printf("\n");
+    state.score = state.score + (state.timeRem/1000000) + SCORECONSTANT*state.lives; 
 }
 
 void drawUI()
@@ -252,6 +236,7 @@ void drawUI()
     drawImage(lives.pixel_data, lives.width, lives.height, TILESIZE, TILESIZE);
     drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE); // Full health at the start.
     
+    // 0 score at the start. 
     drawImage(score.pixel_data, score.width, score.height, 9*TILESIZE, TILESIZE); 
     drawImage(zero.pixel_data, zero.width, zero.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4); // 0 score at the start. 
     drawImage(meso.pixel_data, meso.width, meso.height, 13*TILESIZE - TILESIZE/4, TILESIZE);
@@ -262,7 +247,6 @@ void drawUI()
     drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 19*TILESIZE-10 +  TILESIZE/2, TILESIZE); 
     drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
     drawImage(seconds.pixel_data, seconds.width, seconds.height, 21*TILESIZE-30 + TILESIZE/2, TILESIZE); 
-
 }
 
 void updateUI()
@@ -274,13 +258,25 @@ void updateUI()
     }
     else if (state.lives == 1)
     {
-        drawImage(oneLife.pixel_data, oneLife.width, oneLife.height, 4*TILESIZE, TILESIZE);
+        drawImage(halfLife.pixel_data, halfLife.width, halfLife.height, 4*TILESIZE, TILESIZE);
     }
     else if (state.lives == 2)
     {
-        drawImage(twoLives.pixel_data, twoLives.width, twoLives.height, 4*TILESIZE, TILESIZE);
+        drawImage(oneLife.pixel_data, oneLife.width, oneLife.height, 4*TILESIZE, TILESIZE);
     }
     else if (state.lives == 3)
+    {
+        drawImage(oneHalfLife.pixel_data, oneHalfLife.width, oneHalfLife.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 4)
+    {
+        drawImage(twoLives.pixel_data, twoLives.width, twoLives.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 5)
+    {
+        drawImage(twoHalfLife.pixel_data, twoHalfLife.width, twoHalfLife.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 6)
     {
         drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE);
     }
@@ -326,6 +322,7 @@ void updateUI()
     {
         drawImage(ten.pixel_data, ten.width, ten.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
     }
+
 
     // Update time
     int ones = state.timeRem % 10;
@@ -509,6 +506,39 @@ void drawPauseMenu()
     }
 }
 
+<<<<<<< Updated upstream
+=======
+void drawTile(int x, int y)
+{
+    if(state.map[y][x] == 0)// Draw a regular background tile
+    {
+        if(state.level == 1)// Level 1, Grass level
+        {
+            drawImage(grass.pixel_data, grass.width, grass.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+        else if(state.level == 2)// Level 2, Sand level
+        {
+            drawImage(sand.pixel_data, sand.width, sand.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+    }
+    else if(state.map[y][x] == 1)// Draw an obstical tile
+    {
+        if(state.level == 1)// Level 1, rock obsticle
+        {
+            drawImage(rock.pixel_data, rock.width, rock.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+        else if(state.level == 2)// Level 2, water obsticle
+        {
+            drawImage(water.pixel_data, water.width, water.height, x*TILESIZE, y*TILESIZE + MENUHEIGHT);
+            drawRect(x*TILESIZE, y*TILESIZE + MENUHEIGHT, (x+1)*TILESIZE, (y+1)*TILESIZE + MENUHEIGHT, WHITE, 0);
+        }
+    }
+}
+
+>>>>>>> Stashed changes
 void drawMap()
 {
     fillScreen(BACKGROUNDGREEN);
@@ -837,7 +867,11 @@ void menu()
     drawImage(quitButton.pixel_data, quitButton.width, quitButton.height, 185, 548);
 
     // Refresh/Initilize game state
+<<<<<<< Updated upstream
     state.lives = 4;
+=======
+    state.lives = 6;
+>>>>>>> Stashed changes
     state.score = 0;
     state.timeRem = 300000; // 5 minutes = 300 seconds = 300000 milliseconds.
     state.winFlag = FALSE;
@@ -876,7 +910,6 @@ void menu()
 
 void endMenu()
 {
-    fillScreen(BLACK);
     drawImage(gameOver.pixel_data, gameOver.width, gameOver.height, 396, 300);
 }
 
@@ -913,9 +946,15 @@ void level1()
     drawUI();
     drawEntities();
 
+<<<<<<< Updated upstream
     while(1)
+=======
+    //while(getSNES() >> 3 & 1); // Wait for start button to be pressed before starting the game.
+
+    while(state.lives > 0 && state.winFlag == FALSE && state.timeRem > 0)
+>>>>>>> Stashed changes
     {
-        pressedButtons =  getSNES();// Get current button state to update game state.
+        pressedButtons = getSNES();// Get current button state to update game state.
         updatePlayer();
         updateSaws();
         updateUI();
