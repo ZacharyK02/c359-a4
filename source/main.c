@@ -302,122 +302,122 @@ void winMenu()
     }
     else if (hundreds == 1)
     {
-        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 2)
     {
-        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 3)
     {
-        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 4)
     {
-        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 5)
     {
-        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 6)
     {
-        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 7)
     {
-        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 8)
     {
-        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (hundreds == 9)
     {
-        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
 
     if (tens == 0)
     {
-        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 1)
     {
-        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 2)
     {
-        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 3)
     {
-        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 4)
     {
-        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 5)
     {
-        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 6)
     {
-        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 7)
     {
-        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 8)
     {
-        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (tens == 9)
     {
-        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
 
 
     if (ones == 0)
     {
-        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 1)
     {
-        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 2)
     {
-        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 3)
     {
-        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 4)
     {
-        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 5)
     {
-        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 6)
     {
-        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 7)
     {
-        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 8)
     {
-        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
     else if (ones == 9)
     {
-        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
     }
 
     pressedButtons = getSNES();
