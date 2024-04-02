@@ -570,7 +570,7 @@ void drawUI()
     // 0 score at the start. 
     drawImage(score.pixel_data, score.width, score.height, 9*TILESIZE, TILESIZE); 
 
-    drawImage(meso.pixel_data, meso.width, meso.height, 13*TILESIZE - TILESIZE/4, TILESIZE);
+    drawImage(meso.pixel_data, meso.width, meso.height, 14*TILESIZE - TILESIZE/2, TILESIZE);
     
     drawImage(time.pixel_data, time.width, time.height, 16*TILESIZE, TILESIZE); 
     // Time 300s at start initially. 
@@ -617,55 +617,138 @@ void updateUI()
     }
 
     // Update score
-    if (state.score == 1)
+    int ones = (state.score) % 10;
+    int tens = (state.score/10) % 10;
+    int hundreds = (state.score/100) % 10;
+
+    if (hundreds == 0)
     {
-        drawImage(one.pixel_data, one.width, one.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 2)
+    else if (hundreds == 1)
     {
-        drawImage(two.pixel_data, two.width, two.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeOne.pixel_data, timeOne.width, timeOne.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 3)
+    else if (hundreds == 2)
     {
-        drawImage(three.pixel_data, three.width, three.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeTwo.pixel_data, timeTwo.width, timeTwo.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 4)
+    else if (hundreds == 3)
     {
-        drawImage(four.pixel_data, four.width, four.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 5)
+    else if (hundreds == 4)
     {
-        drawImage(five.pixel_data, five.width, five.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeFour.pixel_data, timeFour.width, timeFour.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 6)
+    else if (hundreds == 5)
     {
-        drawImage(six.pixel_data, six.width, six.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeFive.pixel_data, timeFive.width, timeFive.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 7)
+    else if (hundreds == 6)
     {
-        drawImage(seven.pixel_data, seven.width, seven.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeSix.pixel_data, timeSix.width, timeSix.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 8)
+    else if (hundreds == 7)
     {
-        drawImage(eight.pixel_data, eight.width, eight.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeSeven.pixel_data, timeSeven.width, timeSeven.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 9)
+    else if (hundreds == 8)
     {
-        drawImage(nine.pixel_data, nine.width, nine.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeEight.pixel_data, timeEight.width, timeEight.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else if (state.score == 10)
+    else if (hundreds == 9)
     {
-        drawImage(ten.pixel_data, ten.width, ten.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4);
+        drawImage(timeNine.pixel_data, timeNine.width, timeNine.height, 11*TILESIZE + TILESIZE/2, TILESIZE); 
     }
-    else
+
+    if (tens == 0)
     {
-        drawImage(zero.pixel_data, zero.width, zero.height, 11*TILESIZE + TILESIZE/2, TILESIZE+4); // 0 score at the start. 
+        drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 12*TILESIZE-10 + TILESIZE/2, TILESIZE);
+    }
+    else if (tens == 1)
+    {
+        drawImage(timeOne.pixel_data, timeOne.width, timeOne.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE);
+    }
+    else if (tens == 2)
+    {
+        drawImage(timeTwo.pixel_data, timeTwo.width, timeTwo.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 3)
+    {
+        drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 4)
+    {
+        drawImage(timeFour.pixel_data, timeFour.width, timeFour.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 5)
+    {
+        drawImage(timeFive.pixel_data, timeFive.width, timeFive.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 6)
+    {
+        drawImage(timeSix.pixel_data, timeSix.width, timeSix.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 7)
+    {
+        drawImage(timeSeven.pixel_data, timeSeven.width, timeSeven.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 8)
+    {
+        drawImage(timeEight.pixel_data, timeEight.width, timeEight.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+    else if (tens == 9)
+    {
+        drawImage(timeNine.pixel_data, timeNine.width, timeNine.height, 12*TILESIZE-8 + TILESIZE/2, TILESIZE); 
+    }
+
+
+    if (ones == 0)
+    {
+        drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 1)
+    {
+        drawImage(timeOne.pixel_data, timeOne.width, timeOne.height, 13*TILESIZE-18 + TILESIZE/2, TILESIZE);
+    }
+    else if (ones == 2)
+    {
+        drawImage(timeTwo.pixel_data, timeTwo.width, timeTwo.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 3)
+    {
+        drawImage(timeThree.pixel_data, timeThree.width, timeThree.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 4)
+    {
+        drawImage(timeFour.pixel_data, timeFour.width, timeFour.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 5)
+    {
+        drawImage(timeFive.pixel_data, timeFive.width, timeFive.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 6)
+    {
+        drawImage(timeSix.pixel_data, timeSix.width, timeSix.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 7)
+    {
+        drawImage(timeSeven.pixel_data, timeSeven.width, timeSeven.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 8)
+    {
+        drawImage(timeEight.pixel_data, timeEight.width, timeEight.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
+    }
+    else if (ones == 9)
+    {
+        drawImage(timeNine.pixel_data, timeNine.width, timeNine.height, 13*TILESIZE-20 + TILESIZE/2, TILESIZE); 
     }
 
     // Update time
-    int ones = (state.timeRem/1000000) % 10;
-    int tens = (state.timeRem/10000000) % 10;
-    int hundreds = (state.timeRem/100000000) % 10;
+    ones = (state.timeRem/1000000) % 10;
+    tens = (state.timeRem/10000000) % 10;
+    hundreds = (state.timeRem/100000000) % 10;
 
     if (hundreds == 0)
     {
@@ -1286,17 +1369,19 @@ int main()
     ///////////////////////////////////////////////////////////////////////////
     while(1)
     {
+        mainStart:;
         menu();
         if(state.winFlag == FALSE)
         {
             break;
         }
-        // else if (state.winFlag == TRUE)
-        // {
-        //     endMenu();
-        // }
         
         level(1, level1Map, level1Entities);
+        if(state.quit == TRUE)
+        {
+            goto mainStart; // Jump back to menu if the player selected to quit the level.
+        }
+
         if(state.winFlag == FALSE)
         {
             loseMenu();
@@ -1404,8 +1489,6 @@ void initLevel(int level, int worldMap[20][32], int entityMap[20][32])
     drawUI();
     updateUI();
     drawMap();
-    updateUI();
-    drawMap();
     drawEntities();
 }
 
@@ -1442,8 +1525,12 @@ void level(int level, int worldMap[20][32], int entityMap[20][32])
             drawPauseMenu(level, worldMap, entityMap);
             if(state.restart == TRUE)
             {
-                goto levelStart;// Jump back to level start if the player selected to restart the level.
+                goto levelStart; // Jump back to level start if the player selected to restart the level.
             }
+        }
+        if(state.quit == TRUE)
+        {
+            break;
         }
     }
 } 
