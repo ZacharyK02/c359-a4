@@ -5,15 +5,12 @@
 #include "random.h"
 
 ////////////////////////////////////Images/////////////////////////////////////
-// #include "UI_Elements/startButtonYellow.h"
-// #include "UI_Elements/startButtonGrey.h"
-// #include "UI_Elements/exitButtonYellow.h"
-// #include "UI_Elements/exitButtonGrey.h"
-
 #include "UI_Elements/startButton.h"
 #include "UI_Elements/startButton2.h"
 #include "UI_Elements/quitButton.h"
 #include "UI_Elements/quitButton2.h"
+#include "UI_Elements/won.h"
+#include "UI_Elements/lose.h"
 
 #include "UI_Elements/noLives.h"
 #include "UI_Elements/oneLife.h"
@@ -36,7 +33,17 @@
 #include "UI_Elements/nine.h"
 #include "UI_Elements/ten.h"
 #include "UI_Elements/meso.h"
-#include "UI_Elements/scoreX.h"
+
+#include "UI_Elements/scoreZero.h"
+#include "UI_Elements/scoreOne.h"
+#include "UI_Elements/scoreTwo.h"
+#include "UI_Elements/scoreThree.h"
+#include "UI_Elements/scoreFour.h"
+#include "UI_Elements/scoreFive.h"
+#include "UI_Elements/scoreSix.h"
+#include "UI_Elements/scoreSeven.h"
+#include "UI_Elements/scoreEight.h"
+#include "UI_Elements/scoreNine.h"
 
 #include "UI_Elements/time.h"
 #include "UI_Elements/timeZero.h"
@@ -57,7 +64,7 @@
 #include "UI_Elements/restartButton2.h"
 #include "UI_Elements/pauseQuitButton.h"
 #include "UI_Elements/pauseQuitButton2.h"
-#include "UI_Elements/gameOver.h"
+
 
 #include "EntityAssets/grass.h"
 #include "EntityAssets/sand.h"
@@ -111,6 +118,12 @@
 #define FLAMECOUNT 4
 #define INVINCIBILEDURATION 100 //game ticks of invincibility.
 #define SCORECONSTANT 2 // Constant to multiple score by. 
+#define SCOREOFFSET_ONESX 280 // Offset for score pngs. 
+#define SCOREOFFSETY 290
+#define SCOREOFFSET_TENSX 240
+#define SCOREOFFSET_HUNDREDSX 200
+#define ENDMENUPOS_X 259
+#define ENDMENUPOS_Y 184
 #define MAXHEALTH 6 // Maximum number of hearts.
 
 // Entity indices
@@ -272,6 +285,279 @@ void updateTimeRem(int frameTime)
 void updateScore()
 {
     state.score = state.score + (state.timeRem/1000000) + SCORECONSTANT*state.lives; 
+}
+
+void winMenu()
+{
+    drawImage(won.pixel_data, won.width, won.height, ENDMENUPOS_X, ENDMENUPOS_Y);
+    updateScore();
+
+    int ones = (state.score) % 10;
+    int tens = (state.score)/10 % 10;
+    int hundreds = (state.score)/100 % 10;
+
+    if (hundreds == 0)
+    {
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 1)
+    {
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 2)
+    {
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 3)
+    {
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 4)
+    {
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 5)
+    {
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 6)
+    {
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 7)
+    {
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 8)
+    {
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+    else if (hundreds == 9)
+    {
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, 120+SCOREOFFSETY); 
+    }
+
+    if (tens == 0)
+    {
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 1)
+    {
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 2)
+    {
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 3)
+    {
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 4)
+    {
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 5)
+    {
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 6)
+    {
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 7)
+    {
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 8)
+    {
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+    else if (tens == 9)
+    {
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, 120+SCOREOFFSETY); 
+    }
+
+
+    if (ones == 0)
+    {
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 1)
+    {
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 2)
+    {
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 3)
+    {
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 4)
+    {
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 5)
+    {
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 6)
+    {
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 7)
+    {
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 8)
+    {
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+    else if (ones == 9)
+    {
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, 120+SCOREOFFSETY); 
+    }
+
+    pressedButtons = getSNES();
+    while(getSNES() == 0b1111111111111111);  // Wait until any button is pressed. 
+}
+
+void loseMenu()
+{
+    drawImage(lose.pixel_data, lose.width, lose.height, ENDMENUPOS_X, ENDMENUPOS_Y);
+    updateScore();
+
+    int ones = (state.score) % 10;
+    int tens = (state.score)/10 % 10;
+    int hundreds = (state.score)/100 % 10;
+
+    if (hundreds == 0)
+    {
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 1)
+    {
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 2)
+    {
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 3)
+    {
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 4)
+    {
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 5)
+    {
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 6)
+    {
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 7)
+    {
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 8)
+    {
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (hundreds == 9)
+    {
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_HUNDREDSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+
+    if (tens == 0)
+    {
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 1)
+    {
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 2)
+    {
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 3)
+    {
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 4)
+    {
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 5)
+    {
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 6)
+    {
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 7)
+    {
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 8)
+    {
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (tens == 9)
+    {
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_TENSX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+
+
+    if (ones == 0)
+    {
+        drawImage(scoreZero.pixel_data, scoreZero.width, scoreZero.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 1)
+    {
+        drawImage(scoreOne.pixel_data, scoreOne.width, scoreOne.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 2)
+    {
+        drawImage(scoreTwo.pixel_data, scoreTwo.width, scoreTwo.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 3)
+    {
+        drawImage(scoreThree.pixel_data, scoreThree.width, scoreThree.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 4)
+    {
+        drawImage(scoreFour.pixel_data, scoreFour.width, scoreFour.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 5)
+    {
+        drawImage(scoreFive.pixel_data, scoreFive.width, scoreFive.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 6)
+    {
+        drawImage(scoreSix.pixel_data, scoreSix.width, scoreSix.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 7)
+    {
+        drawImage(scoreSeven.pixel_data, scoreSeven.width, scoreSeven.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 8)
+    {
+        drawImage(scoreEight.pixel_data, scoreEight.width, scoreEight.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    else if (ones == 9)
+    {
+        drawImage(scoreNine.pixel_data, scoreNine.width, scoreNine.height, ENDMENUPOS_X+SCOREOFFSET_ONESX, ENDMENUPOS_Y+SCOREOFFSETY); 
+    }
+    pressedButtons = getSNES();
+    while(getSNES() == 0b1111111111111111); // Wait until any button is pressed. 
 }
 
 void drawUI()
@@ -1013,17 +1299,18 @@ int main()
         level(1, level1Map, level1Entities);
         if(state.winFlag == FALSE)
         {
-            // display lose screen and wait for play to press any button.
+            loseMenu();
             continue;
         }
 
         level(2, level2Map, level2Entities);
         if(state.winFlag == FALSE)
         {
-            // display lose screen and wait for play to press anybutton
+            loseMenu();
             continue;
         }
         
+        winMenu();
         // all levels have been completed. Display win screen with final score
         // wait for any button to be pressed before returning to main menu.
 
@@ -1082,11 +1369,6 @@ void menu()
     }
 }
 
-void endMenu()
-{
-    drawImage(gameOver.pixel_data, gameOver.width, gameOver.height, 396, 300);
-}
-
 void initLevel(int level, int worldMap[20][32], int entityMap[20][32])
 {
     state.winFlag = FALSE;
@@ -1120,6 +1402,8 @@ void initLevel(int level, int worldMap[20][32], int entityMap[20][32])
     
     // Draw the map state
     drawUI();
+    updateUI();
+    drawMap();
     updateUI();
     drawMap();
     drawEntities();
