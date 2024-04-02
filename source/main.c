@@ -15,14 +15,15 @@
 #include "UI_Elements/quitButton.h"
 #include "UI_Elements/quitButton2.h"
 
-
 #include "UI_Elements/noLives.h"
 #include "UI_Elements/oneLife.h"
 #include "UI_Elements/twoLives.h"
 #include "UI_Elements/threeLives.h"
+#include "UI_Elements/halfLife.h"
+#include "UI_Elements/oneHalfLife.h"
+#include "UI_Elements/twoHalfLife.h"
 #include "UI_Elements/lives.h"
 #include "UI_Elements/score.h"
-#include "UI_Elements/meso.h"
 #include "UI_Elements/zero.h"
 #include "UI_Elements/one.h"
 #include "UI_Elements/two.h"
@@ -34,8 +35,10 @@
 #include "UI_Elements/eight.h"
 #include "UI_Elements/nine.h"
 #include "UI_Elements/ten.h"
-#include "UI_Elements/time.h"
+#include "UI_Elements/meso.h"
+#include "UI_Elements/scoreX.h"
 
+#include "UI_Elements/time.h"
 #include "UI_Elements/timeZero.h"
 #include "UI_Elements/timeOne.h"
 #include "UI_Elements/timeTwo.h"
@@ -106,7 +109,11 @@
 #define FRAMETIME 1000000 // frame time in microseconds. Frequency of game refresh.
 #define SAWCOUNT 6
 #define FLAMECOUNT 4
+<<<<<<< Updated upstream
+=======
 #define INVINCIBILEDURATION 100 //game ticks of invincibility.
+#define SCORECONSTANT 2 // Constant to multiple score by. 
+>>>>>>> Stashed changes
 
 // Entity indices
 #define PLAYER 1
@@ -259,10 +266,17 @@ void printf(char *str) {
 	uart_puts(str);
 }
 
+<<<<<<< Updated upstream
+
 void updateTimeRem(int frameTime)
 {   
-    // Increment the time based on the time between frames.
     state.timeRem -= frameTime;
+}
+
+void updateScore()
+>>>>>>> Stashed changes
+{
+    state.score = state.score + (state.timeRem/1000000) + SCORECONSTANT*state.lives; 
 }
 
 void drawUI()
@@ -272,6 +286,7 @@ void drawUI()
     
     drawImage(lives.pixel_data, lives.width, lives.height, TILESIZE, TILESIZE);
     
+    // 0 score at the start. 
     drawImage(score.pixel_data, score.width, score.height, 9*TILESIZE, TILESIZE); 
 
     drawImage(meso.pixel_data, meso.width, meso.height, 13*TILESIZE - TILESIZE/4, TILESIZE);
@@ -282,8 +297,6 @@ void drawUI()
     // drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 19*TILESIZE-10 +  TILESIZE/2, TILESIZE); 
     // drawImage(timeZero.pixel_data, timeZero.width, timeZero.height, 20*TILESIZE-20 + TILESIZE/2, TILESIZE); 
     drawImage(seconds.pixel_data, seconds.width, seconds.height, 21*TILESIZE-30 + TILESIZE/2, TILESIZE); 
-    
-
 }
 
 void updateUI()
@@ -295,13 +308,25 @@ void updateUI()
     }
     else if (state.lives == 1)
     {
-        drawImage(oneLife.pixel_data, oneLife.width, oneLife.height, 4*TILESIZE, TILESIZE);
+        drawImage(halfLife.pixel_data, halfLife.width, halfLife.height, 4*TILESIZE, TILESIZE);
     }
     else if (state.lives == 2)
     {
-        drawImage(twoLives.pixel_data, twoLives.width, twoLives.height, 4*TILESIZE, TILESIZE);
+        drawImage(oneLife.pixel_data, oneLife.width, oneLife.height, 4*TILESIZE, TILESIZE);
     }
     else if (state.lives == 3)
+    {
+        drawImage(oneHalfLife.pixel_data, oneHalfLife.width, oneHalfLife.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 4)
+    {
+        drawImage(twoLives.pixel_data, twoLives.width, twoLives.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 5)
+    {
+        drawImage(twoHalfLife.pixel_data, twoHalfLife.width, twoHalfLife.height, 4*TILESIZE, TILESIZE);
+    }
+    else if (state.lives == 6)
     {
         drawImage(threeLives.pixel_data, threeLives.width, threeLives.height, 4*TILESIZE, TILESIZE);
     }
@@ -1064,7 +1089,6 @@ void menu()
 
 void endMenu()
 {
-    fillScreen(BLACK);
     drawImage(gameOver.pixel_data, gameOver.width, gameOver.height, 396, 300);
 }
 
