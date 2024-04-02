@@ -7,7 +7,16 @@ Description: An adventure version of snake as described in assignment 4.
              The apples increase hp or score if you have full hp.
              The coins increse score. The water bottle gives invinsibility.
              The flags are the goals. The disks are saws that can damage the
-             player. The flames are fire enemies that can also damage the player.
+             player. The flames (with faces) are fire enemies that can also damage the player.
+             They slowly move around the map at random. (The random numbers are not the most
+             random given the nature of randomness, but is our attempt at doing so).
+
+Instructions:
+             After selecting start, pressing the start button should start the level. 
+             However, the controller is a bit sensitive to the start button. 
+             It may also bring up the pause menu if pressed too slowly. 
+             Simply press start again to exit the pause menu and continue the game. 
+             Pressing the start button during the gameplay will bring up the pause menu.
 
 Authors:
 Zachary Kokot (UCID: 30115582)
@@ -1409,6 +1418,11 @@ int main()
         }
 
         level(2, level2Map, level2Entities);
+        if(state.quit == TRUE)
+        {
+            goto mainStart; // Jump back to menu if the player selected to quit the level.
+        }
+
         if(state.winFlag == FALSE)
         {
             loseMenu();

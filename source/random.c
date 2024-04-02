@@ -11,7 +11,6 @@ inline void srand(int x)
 	rseed = x;
 }
 
-#define MS_RAND 1
 #ifndef MS_RAND
 #define RAND_MAX ((1U << 31) - 1)
 
