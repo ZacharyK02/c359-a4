@@ -28,12 +28,23 @@
         "stdint.h": "c",
         "flame.h": "c",
         "apple.h": "c",
+<<<<<<< Updated upstream
         "onehalflife.h": "c",
         "halflife.h": "c",
         "score.h": "c",
         "time.h": "c",
         "meso.h": "c",
         "zero.h": "c"
+>>>>>>> Stashed changes
+=======
+        "threelives.h": "c",
+        "onelife.h": "c",
+        "zero.h": "c",
+        "scoreone.h": "c",
+        "timeeight.h": "c",
+        "restartbutton2.h": "c",
+        "scoreeight.h": "c",
+        "timefour.h": "c"
 >>>>>>> Stashed changes
     }
 }
