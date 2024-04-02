@@ -26,7 +26,7 @@ LOAD build/ssp.o
 LOAD build/uart.o
                 0x0000000000080000                . = 0x80000
 
-.text           0x0000000000080000     0x3e2c
+.text           0x0000000000080000     0x3f60
  *(.text.boot)
  .text.boot     0x0000000000080000       0x50 build/start.o
                 0x0000000000080000                _start
@@ -47,125 +47,126 @@ LOAD build/uart.o
                 0x0000000000080758                fillScreen
                 0x00000000000807dc                drawRect
                 0x00000000000808cc                drawImage
- .text          0x00000000000809cc     0x3050 build/main.o
+ .text          0x00000000000809cc     0x3184 build/main.o
                 0x00000000000809cc                printf
                 0x00000000000809ec                updateTimeRem
-                0x0000000000080a20                drawUI
-                0x0000000000080b04                updateUI
-                0x00000000000815a0                drawPauseMenu
-                0x00000000000817cc                drawTile
-                0x0000000000081a8c                drawMap
-                0x0000000000081af0                drawEntities
-                0x0000000000082460                checkCollision
-                0x0000000000082994                updatePlayer
-                0x0000000000082c50                updateSaws
-                0x000000000008312c                updateFlames
-                0x00000000000833b8                main
-                0x0000000000083478                menu
-                0x00000000000836bc                endMenu
-                0x00000000000836fc                initLevel
-                0x0000000000083888                level
- .text          0x0000000000083a1c       0xac build/mbox.o
-                0x0000000000083a1c                mbox_call
- .text          0x0000000000083ac8       0x3c build/random.o
-                0x0000000000083ac8                rand
- .text          0x0000000000083b04       0x1c build/ssp.o
-                0x0000000000083b04                __stack_chk_fail
- .text          0x0000000000083b20      0x30c build/uart.o
-                0x0000000000083b20                spin_for_cycles
-                0x0000000000083b54                uart_init
-                0x0000000000083cc0                uart_send
-                0x0000000000083d00                uart_getc
-                0x0000000000083d50                uart_puts
-                0x0000000000083dac                uart_hex
+                0x0000000000080a20                updateScore
+                0x0000000000080a80                drawUI
+                0x0000000000080b64                updateUI
+                0x00000000000816dc                drawPauseMenu
+                0x0000000000081908                drawTile
+                0x0000000000081bc8                drawMap
+                0x0000000000081c2c                drawEntities
+                0x000000000008259c                checkCollision
+                0x0000000000082ad0                updatePlayer
+                0x0000000000082d8c                updateSaws
+                0x0000000000083268                updateFlames
+                0x00000000000834f4                main
+                0x00000000000835b4                menu
+                0x00000000000837f8                endMenu
+                0x0000000000083830                initLevel
+                0x00000000000839bc                level
+ .text          0x0000000000083b50       0xac build/mbox.o
+                0x0000000000083b50                mbox_call
+ .text          0x0000000000083bfc       0x3c build/random.o
+                0x0000000000083bfc                rand
+ .text          0x0000000000083c38       0x1c build/ssp.o
+                0x0000000000083c38                __stack_chk_fail
+ .text          0x0000000000083c54      0x30c build/uart.o
+                0x0000000000083c54                spin_for_cycles
+                0x0000000000083c88                uart_init
+                0x0000000000083df4                uart_send
+                0x0000000000083e34                uart_getc
+                0x0000000000083e84                uart_puts
+                0x0000000000083ee0                uart_hex
 
-.iplt           0x0000000000083e2c        0x0
- .iplt          0x0000000000083e2c        0x0 build/start.o
+.iplt           0x0000000000083f60        0x0
+ .iplt          0x0000000000083f60        0x0 build/start.o
 
-.rodata         0x0000000000083e30   0x50eeda
+.rodata         0x0000000000083f60   0x517c9a
  *(.rodata .rodata.* .gnu.linkonce.r*)
- .rodata        0x0000000000083e30   0x50eeb8 build/main.o
- .rodata        0x0000000000592ce8       0x22 build/ssp.o
+ .rodata        0x0000000000083f60   0x517c78 build/main.o
+ .rodata        0x000000000059bbd8       0x22 build/ssp.o
                 [!provide]                        PROVIDE (_data = .)
 
-.rela.dyn       0x0000000000592d10        0x0
- .rela.iplt     0x0000000000592d10        0x0 build/start.o
+.rela.dyn       0x000000000059bc00        0x0
+ .rela.iplt     0x000000000059bc00        0x0 build/start.o
  .rela.text.boot
-                0x0000000000592d10        0x0 build/start.o
+                0x000000000059bc00        0x0 build/start.o
 
-.data           0x0000000000592d10     0x2838
+.data           0x000000000059bc00     0x1e38
  *(.data .data.* .gnu.linkonce.d*)
- .data          0x0000000000592d10        0x0 build/start.o
- .data          0x0000000000592d10       0x30 build/controllerDriver.o
-                0x0000000000592d10                gpfs
- .data          0x0000000000592d40        0x0 build/framebuffer.o
- .data          0x0000000000592d40     0x2808 build/main.o
-                0x0000000000592d40                displayTime
-                0x0000000000592d48                level1Map
-                0x0000000000593748                level1Entities
-                0x0000000000594148                level2Map
-                0x0000000000594b48                level2Entities
- .data          0x0000000000595548        0x0 build/mbox.o
- .data          0x0000000000595548        0x0 build/random.o
- .data          0x0000000000595548        0x0 build/ssp.o
- .data          0x0000000000595548        0x0 build/uart.o
+ .data          0x000000000059bc00        0x0 build/start.o
+ .data          0x000000000059bc00       0x30 build/controllerDriver.o
+                0x000000000059bc00                gpfs
+ .data          0x000000000059bc30        0x0 build/framebuffer.o
+ .data          0x000000000059bc30     0x1e08 build/main.o
+                0x000000000059bc30                displayTime
+                0x000000000059bc38                level1Map
+                0x000000000059c638                level1Entities
+                0x000000000059d038                level2Map
+ .data          0x000000000059da38        0x0 build/mbox.o
+ .data          0x000000000059da38        0x0 build/random.o
+ .data          0x000000000059da38        0x0 build/ssp.o
+ .data          0x000000000059da38        0x0 build/uart.o
 
-.igot.plt       0x0000000000595548        0x0
- .igot.plt      0x0000000000595548        0x0 build/start.o
+.igot.plt       0x000000000059da38        0x0
+ .igot.plt      0x000000000059da38        0x0 build/start.o
 
-.bss            0x0000000000595550     0x1504
-                0x0000000000595550                . = ALIGN (0x10)
-                0x0000000000595550                __bss_start = .
+.bss            0x000000000059da40     0x1f04
+                0x000000000059da40                . = ALIGN (0x10)
+                0x000000000059da40                __bss_start = .
  *(.bss .bss.*)
- .bss           0x0000000000595550        0x0 build/start.o
- .bss           0x0000000000595550        0x8 build/controllerDriver.o
-                0x0000000000595550                current
-                0x0000000000595554                previous
- .bss           0x0000000000595558       0x18 build/framebuffer.o
-                0x0000000000595558                width
-                0x000000000059555c                height
-                0x0000000000595560                pitch
-                0x0000000000595568                framebuffer
- .bss           0x0000000000595570     0x1448 build/main.o
-                0x0000000000595570                pressedButtons
-                0x0000000000595578                state
- *fill*         0x00000000005969b8        0x8 
- .bss           0x00000000005969c0       0x90 build/mbox.o
-                0x00000000005969c0                mbox
- .bss           0x0000000000596a50        0x4 build/random.o
-                0x0000000000596a50                rseed
- .bss           0x0000000000596a54        0x0 build/ssp.o
- .bss           0x0000000000596a54        0x0 build/uart.o
+ .bss           0x000000000059da40        0x0 build/start.o
+ .bss           0x000000000059da40        0x8 build/controllerDriver.o
+                0x000000000059da40                current
+                0x000000000059da44                previous
+ .bss           0x000000000059da48       0x18 build/framebuffer.o
+                0x000000000059da48                width
+                0x000000000059da4c                height
+                0x000000000059da50                pitch
+                0x000000000059da58                framebuffer
+ .bss           0x000000000059da60     0x1e48 build/main.o
+                0x000000000059da60                pressedButtons
+                0x000000000059da68                level2Entities
+                0x000000000059e468                state
+ *fill*         0x000000000059f8a8        0x8 
+ .bss           0x000000000059f8b0       0x90 build/mbox.o
+                0x000000000059f8b0                mbox
+ .bss           0x000000000059f940        0x4 build/random.o
+                0x000000000059f940                rseed
+ .bss           0x000000000059f944        0x0 build/ssp.o
+ .bss           0x000000000059f944        0x0 build/uart.o
  *(COMMON)
-                0x0000000000596a54                __bss_end = .
-                0x0000000000596a54                _end = .
+                0x000000000059f944                __bss_end = .
+                0x000000000059f944                _end = .
 
 /DISCARD/
  *(.comment)
  *(.gnu*)
  *(.note*)
  *(.eh_frame*)
-                0x00000000000002a0                __bss_size = ((__bss_end - __bss_start) >> 0x3)
+                0x00000000000003e0                __bss_size = ((__bss_end - __bss_start) >> 0x3)
 OUTPUT(kernel8.elf elf64-littleaarch64)
 LOAD linker stubs
 
-.debug_info     0x0000000000000000     0x29a1
+.debug_info     0x0000000000000000     0x2a09
  .debug_info    0x0000000000000000      0x271 build/controllerDriver.o
  .debug_info    0x0000000000000271      0x347 build/framebuffer.o
- .debug_info    0x00000000000005b8     0x20a4 build/main.o
- .debug_info    0x000000000000265c       0xba build/mbox.o
- .debug_info    0x0000000000002716       0x7a build/random.o
- .debug_info    0x0000000000002790       0x68 build/ssp.o
- .debug_info    0x00000000000027f8      0x1a9 build/uart.o
+ .debug_info    0x00000000000005b8     0x210c build/main.o
+ .debug_info    0x00000000000026c4       0xba build/mbox.o
+ .debug_info    0x000000000000277e       0x7a build/random.o
+ .debug_info    0x00000000000027f8       0x68 build/ssp.o
+ .debug_info    0x0000000000002860      0x1a9 build/uart.o
 
-.debug_abbrev   0x0000000000000000      0x7c8
+.debug_abbrev   0x0000000000000000      0x7f2
  .debug_abbrev  0x0000000000000000      0x130 build/controllerDriver.o
  .debug_abbrev  0x0000000000000130      0x132 build/framebuffer.o
- .debug_abbrev  0x0000000000000262      0x2ea build/main.o
- .debug_abbrev  0x000000000000054c       0x98 build/mbox.o
- .debug_abbrev  0x00000000000005e4       0x5e build/random.o
- .debug_abbrev  0x0000000000000642       0x60 build/ssp.o
- .debug_abbrev  0x00000000000006a2      0x126 build/uart.o
+ .debug_abbrev  0x0000000000000262      0x314 build/main.o
+ .debug_abbrev  0x0000000000000576       0x98 build/mbox.o
+ .debug_abbrev  0x000000000000060e       0x5e build/random.o
+ .debug_abbrev  0x000000000000066c       0x60 build/ssp.o
+ .debug_abbrev  0x00000000000006cc      0x126 build/uart.o
 
 .debug_aranges  0x0000000000000000      0x150
  .debug_aranges
@@ -183,48 +184,48 @@ LOAD linker stubs
  .debug_aranges
                 0x0000000000000120       0x30 build/uart.o
 
-.debug_line     0x0000000000000000     0x16cd
+.debug_line     0x0000000000000000     0x173c
  .debug_line    0x0000000000000000      0x178 build/controllerDriver.o
  .debug_line    0x0000000000000178      0x1b9 build/framebuffer.o
- .debug_line    0x0000000000000331     0x10ea build/main.o
- .debug_line    0x000000000000141b       0x93 build/mbox.o
- .debug_line    0x00000000000014ae       0x5e build/random.o
- .debug_line    0x000000000000150c       0x58 build/ssp.o
- .debug_line    0x0000000000001564      0x169 build/uart.o
+ .debug_line    0x0000000000000331     0x1159 build/main.o
+ .debug_line    0x000000000000148a       0x93 build/mbox.o
+ .debug_line    0x000000000000151d       0x5e build/random.o
+ .debug_line    0x000000000000157b       0x58 build/ssp.o
+ .debug_line    0x00000000000015d3      0x169 build/uart.o
 
-.debug_str      0x0000000000000000      0x5a8
- .debug_str     0x0000000000000000      0x5a8 build/controllerDriver.o
+.debug_str      0x0000000000000000      0x5dc
+ .debug_str     0x0000000000000000      0x5dc build/controllerDriver.o
                                          0xe1 (size before relaxing)
- .debug_str     0x00000000000005a8       0xfe build/framebuffer.o
- .debug_str     0x00000000000005a8      0x4cb build/main.o
- .debug_str     0x00000000000005a8       0x6d build/mbox.o
- .debug_str     0x00000000000005a8       0x3c build/random.o
- .debug_str     0x00000000000005a8       0x51 build/ssp.o
- .debug_str     0x00000000000005a8       0xb3 build/uart.o
+ .debug_str     0x00000000000005dc       0xfe build/framebuffer.o
+ .debug_str     0x00000000000005dc      0x4ff build/main.o
+ .debug_str     0x00000000000005dc       0x6d build/mbox.o
+ .debug_str     0x00000000000005dc       0x3c build/random.o
+ .debug_str     0x00000000000005dc       0x51 build/ssp.o
+ .debug_str     0x00000000000005dc       0xb3 build/uart.o
 
 .debug_line_str
-                0x0000000000000000      0x385
+                0x0000000000000000      0x3b5
  .debug_line_str
-                0x0000000000000000      0x385 build/controllerDriver.o
+                0x0000000000000000      0x3b5 build/controllerDriver.o
                                          0x9f (size before relaxing)
  .debug_line_str
-                0x0000000000000385       0x97 build/framebuffer.o
+                0x00000000000003b5       0x97 build/framebuffer.o
  .debug_line_str
-                0x0000000000000385      0x36d build/main.o
+                0x00000000000003b5      0x39d build/main.o
  .debug_line_str
-                0x0000000000000385       0x7b build/mbox.o
+                0x00000000000003b5       0x7b build/mbox.o
  .debug_line_str
-                0x0000000000000385       0x81 build/random.o
+                0x00000000000003b5       0x81 build/random.o
  .debug_line_str
-                0x0000000000000385       0x7f build/ssp.o
+                0x00000000000003b5       0x7f build/ssp.o
  .debug_line_str
-                0x0000000000000385       0x82 build/uart.o
+                0x00000000000003b5       0x82 build/uart.o
 
-.debug_frame    0x0000000000000000      0x620
+.debug_frame    0x0000000000000000      0x638
  .debug_frame   0x0000000000000000      0x120 build/controllerDriver.o
  .debug_frame   0x0000000000000120       0xd0 build/framebuffer.o
- .debug_frame   0x00000000000001f0      0x2b0 build/main.o
- .debug_frame   0x00000000000004a0       0x30 build/mbox.o
- .debug_frame   0x00000000000004d0       0x30 build/random.o
- .debug_frame   0x0000000000000500       0x30 build/ssp.o
- .debug_frame   0x0000000000000530       0xf0 build/uart.o
+ .debug_frame   0x00000000000001f0      0x2c8 build/main.o
+ .debug_frame   0x00000000000004b8       0x30 build/mbox.o
+ .debug_frame   0x00000000000004e8       0x30 build/random.o
+ .debug_frame   0x0000000000000518       0x30 build/ssp.o
+ .debug_frame   0x0000000000000548       0xf0 build/uart.o
